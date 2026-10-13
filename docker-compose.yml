@@ -5,3 +5,15 @@ services:
       - "3000:3000"
     volumes:
       - ./api/src:/api/src
+
+  mongodb:
+    image: mongo:latest
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: user
+      MONGO_INITDB_ROOT_PASSWORD: root
+    volumes:
+      - ./mongodb_data:/data/db
+    command: ["mongod", "--bind_ip_all"]
