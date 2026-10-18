@@ -14,10 +14,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-//            App()
-            MaterialTheme {
-                SocketTestScreen()
-            }
+            App()
+//            MaterialTheme {
+//                SocketTestScreen()
+//            }
         }
     }
 }
@@ -25,8 +25,8 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 fun AppAndroidPreview() {
-//    App()
-    MaterialTheme {
-        SocketTestScreen()
-    }
+    App()
+//    MaterialTheme {
+//        SocketTestScreen()
+//    }
 }
