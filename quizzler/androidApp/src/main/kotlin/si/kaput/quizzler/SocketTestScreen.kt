@@ -27,6 +27,7 @@ import io.socket.client.Ack
 import io.socket.client.IO
 import io.socket.client.Socket
 
+// TODO: dodaj .env
 private const val SERVER_URL = "http://10.0.2.2:3000"
 private const val LOCAL_NETWORK_PERMISSION = "android.permission.ACCESS_LOCAL_NETWORK"
 
@@ -35,11 +36,6 @@ fun SocketTestScreen() {
     val context = LocalContext.current
     val logs = remember { mutableStateListOf<String>() }
     var status by remember { mutableStateOf("connecting…") }
-
-    fun hasLocalNetwork() =
-        Build.VERSION.SDK_INT < 37 ||
-                context.checkSelfPermission(LOCAL_NETWORK_PERMISSION) == PackageManager.PERMISSION_GRANTED
-
     var allowed by remember { mutableStateOf(hasLocalNetwork()) }
 
     val launcher = rememberLauncherForActivityResult(
@@ -102,4 +98,8 @@ fun SocketTestScreen() {
             items(logs.reversed()) { Text(it) }
         }
     }
+}
+
+fun hasLocalNetwork() {
+    Build.VERSION.SDK_INT < 37 || context.checkSelfPermission(LOCAL_NETWORK_PERMISSION) == PackageManager.PERMISSION_GRANTED
 }

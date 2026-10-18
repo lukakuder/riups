@@ -5,6 +5,8 @@ import mongoose from 'mongoose';
 import { Server } from 'socket.io';
 
 const app = express();
+
+// TODO: Premakni to v .env datoteko
 const PORT: number = 3000;
 const MONGO_URI = 'mongodb://user:root@mongodb:27017/quizzler?authSource=admin';
 
@@ -29,11 +31,10 @@ app.get('/', (req: Request, res: Response) => {
     res.send('Works hey here here here');
 });
 
-// HTTP server shared by Express and Socket.IO
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: '*' } });
 
-// Socket test: counter that ticks every second + echo with ack
+// Test za povezavo z socketi
 io.on('connection', (socket) => {
     console.log('connected', socket.id);
 
