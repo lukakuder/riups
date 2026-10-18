@@ -14,9 +14,15 @@ dependencies {
     implementation(project(":shared"))
 
     implementation(libs.androidx.activity.compose)
-
     implementation(libs.compose.uiToolingPreview)
     debugImplementation(libs.compose.uiTooling)
+
+    // Za komunikacijo preko socketov
+    implementation("io.socket:socket.io-client:2.1.0") { exclude(group = "org.json", module = "json") }
+
+    implementation(libs.compose.runtime)
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.material3)
 }
 
 android {

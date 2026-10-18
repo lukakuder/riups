@@ -1,2 +1,5 @@
 .idea
 /mongodb_data/
+api/.yarn
+api/.pnp.cjs
+api/node_modules
