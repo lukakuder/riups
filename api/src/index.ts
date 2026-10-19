@@ -4,34 +4,30 @@ import http from 'http';
 import dotenv from 'dotenv';
 import { Server } from 'socket.io';
 import { connectToDatabase } from './config/db.js';
-import quizRouter from './routes/quizzes.js'
+import { createQuizRouter } from './routes/quizzes.js'
 
 const app = express();
 app.use(express.json());
 dotenv.config();
 
+const server = http.createServer(app);
+const io = new Server(server, { cors: { origin: '*' } });
+
 await connectToDatabase();
 
 // Definicija routov
-app.use('/api/quizzes', quizRouter);
-
-const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: '*' } });
+app.use('/api/quizzes', createQuizRouter(io));
 
 // Test za povezavo z socketi
 io.on('connection', (socket) => {
     console.log('connected', socket.id);
 
-    let n = 0;
-    const timer = setInterval(() => socket.emit('tick', n++), 1000);
-
-    socket.on('echo', (msg: string, ack?: (reply: string) => void) => {
-        console.log('echo:', msg);
-        ack?.(`server got: ${msg}`);
+    socket.on('join', (code: string) => {
+        socket.join(code);
+        console.log(`Socket ${socket.id} joined game: ${code}`);
     });
 
     socket.on('disconnect', () => {
-        clearInterval(timer);
         console.log('disconnected', socket.id);
     });
 });
