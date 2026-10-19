@@ -37,6 +37,37 @@ router.post('/', async (req: Request, res: Response) => {
             error
         })
     }
+});
+
+router.post('/start', async (req: Request, res: Response) => {
+    try {
+        const { id } = req.body ?? [];
+
+        if (!id) {
+            console.error('Missing required fields in request body');
+            return res.status(400).send({
+                message: 'Missing required fields in request body'
+            });
+        }
+
+        const quiz = await Quiz.findByIdAndUpdate(
+            id,
+            { status: QuizStatusEnum.IN_PROGRESS },
+            { new: true }
+        );
+
+        if (!quiz) {
+            return res.status(404).send({ message: 'Quiz not found' });
+        }
+
+        res.status(200).send(quiz);
+    } catch (error) {
+        console.error(error);
+        res.status(400).send({
+            message: 'Error starting a quiz',
+            error
+        })
+    }
 })
 
 export default router;
