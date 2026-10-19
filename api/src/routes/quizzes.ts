@@ -3,6 +3,7 @@ import { Quiz } from "../common/models/quiz.model.js";
 import { QuizStatusEnum } from "../common/enums/quizStatusEnum.js";
 import { generateUniqueCode } from "../common/utils/quiz.util.js";
 import { Server } from "socket.io";
+import { startGame } from "../game.js";
 
 export function createQuizRouter(io: Server) {
     const router = Router();
@@ -63,6 +64,21 @@ export function createQuizRouter(io: Server) {
             }
 
             res.status(200).send(quiz);
+
+            await startGame(io, String(quiz._id));
+
+            // for (const question in quiz.questions) {
+            //     io.to(String(quiz.code)).emit('question', question);
+            //
+            //     setTimeout()
+            //
+            //     io.to(String(quiz.code)).emit('question-end', question);
+            //
+            //     sleep(5seconds);
+            // }
+            //
+            // const results = await Quiz.findById(id);
+            // io.to(String(quiz.code)).emit('results', results);
         } catch (error) {
             console.error(error);
             res.status(400).send({
