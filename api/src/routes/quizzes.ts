@@ -1,6 +1,7 @@
 import { Router, type Request, type Response } from "express";
 import { Quiz } from "../common/models/quiz.model.js";
 import { QuizStatusEnum } from "../common/enums/quizStatusEnum.js";
+import { generateUniqueCode } from "../common/utils/quiz.util.js";
 
 const router = Router();
 
@@ -15,8 +16,10 @@ router.post('/', async (req: Request, res: Response) => {
             });
         }
 
+        const code = await generateUniqueCode();
+
         const quiz = await Quiz.create({
-            code: 123456,
+            code: code,
             status: QuizStatusEnum.WAITING,
             name: name,
             subject: subject,
