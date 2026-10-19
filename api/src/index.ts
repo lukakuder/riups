@@ -2,18 +2,16 @@
 import express, { type Request, type Response } from 'express';
 import http from 'http';
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 import { Server } from 'socket.io';
 
 const app = express();
-
-// TODO: Premakni to v .env datoteko
-const PORT: number = 3000;
-const MONGO_URI = 'mongodb://user:root@mongodb:27017/quizzler?authSource=admin';
+dotenv.config();
 
 async function connectWithRetry(tries = 10) {
     for (let i = 1; i <= tries; i++) {
         try {
-            await mongoose.connect(MONGO_URI, { serverSelectionTimeoutMS: 3000 });
+            await mongoose.connect(process.env.MONGO_URI!, { serverSelectionTimeoutMS: 3000 });
             console.log("MongoDB connected");
             return;
         } catch (e) {
@@ -53,6 +51,6 @@ io.on('connection', (socket) => {
 });
 
 // Zagon strežnika
-server.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server runs on : http://localhost:${PORT}`);
+server.listen(parseInt(process.env.PORT!), '0.0.0.0', () => {
+    console.log(`Server runs on : http://localhost:${process.env.PORT}`);
 });
