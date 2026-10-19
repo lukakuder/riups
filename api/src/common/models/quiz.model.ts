@@ -1,4 +1,6 @@
 import { Schema, model } from 'mongoose';
+import { questionSchema } from "./question.model.js";
+import { playerSchema } from "./player.model.js";
 
 const quizSchema = new Schema(
     {
@@ -9,8 +11,8 @@ const quizSchema = new Schema(
         question_number: { type: Number, required: true },
         status: { type: String, required: true },
 
-        questions: { type: Array },
-        players: { type: Array },
+        questions: [questionSchema],
+        players: [playerSchema],
     },
     {
         timestamps: true,
