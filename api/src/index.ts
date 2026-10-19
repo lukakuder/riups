@@ -1,33 +1,19 @@
 // @ts-ignore
-import express, { type Request, type Response } from 'express';
+import express from 'express';
 import http from 'http';
-import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import { Server } from 'socket.io';
+import { connectToDatabase } from './config/db.js';
+import quizRouter from './routes/quizzes.js'
 
 const app = express();
+app.use(express.json());
 dotenv.config();
 
-async function connectWithRetry(tries = 10) {
-    for (let i = 1; i <= tries; i++) {
-        try {
-            await mongoose.connect(process.env.MONGO_URI!, { serverSelectionTimeoutMS: 3000 });
-            console.log("MongoDB connected");
-            return;
-        } catch (e) {
-            console.log(`Mongo not ready (${i}/${tries}), retrying...`);
-            await new Promise((r) => setTimeout(r, 2000));
-        }
-    }
-    throw new Error("Could not connect to MongoDB");
-}
+await connectToDatabase();
 
-await connectWithRetry();
-
-// Osnovna pot
-app.get('/', (req: Request, res: Response) => {
-    res.send('Works hey here here here');
-});
+// Definicija routov
+app.use('/api/quizzes', quizRouter);
 
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: '*' } });
