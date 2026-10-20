@@ -5,6 +5,9 @@ services:
       - "3000:3000"
     volumes:
       - ./api/src:/api/src
+      - ./api/.env:/api/.env
+    depends_on:
+      - mongodb
 
   mongodb:
     image: mongo:latest

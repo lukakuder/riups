@@ -1,58 +1,24 @@
 // @ts-ignore
-import express, { type Request, type Response } from 'express';
+import express from 'express';
 import http from 'http';
-import mongoose from 'mongoose';
-import { Server } from 'socket.io';
+import dotenv from 'dotenv';
+import { connectToDatabase } from './config/db.js';
+import { createQuizRouter } from './routes/quizzes.js'
+import {initializeSockets} from "./sockets.js";
 
 const app = express();
-
-// TODO: Premakni to v .env datoteko
-const PORT: number = 3000;
-const MONGO_URI = 'mongodb://user:root@mongodb:27017/quizzler?authSource=admin';
-
-async function connectWithRetry(tries = 10) {
-    for (let i = 1; i <= tries; i++) {
-        try {
-            await mongoose.connect(MONGO_URI, { serverSelectionTimeoutMS: 3000 });
-            console.log("MongoDB connected");
-            return;
-        } catch (e) {
-            console.log(`Mongo not ready (${i}/${tries}), retrying...`);
-            await new Promise((r) => setTimeout(r, 2000));
-        }
-    }
-    throw new Error("Could not connect to MongoDB");
-}
-
-await connectWithRetry();
-
-// Osnovna pot
-app.get('/', (req: Request, res: Response) => {
-    res.send('Works hey here here here');
-});
+app.use(express.json());
+dotenv.config();
 
 const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: '*' } });
+const io = initializeSockets(server);
 
-// Test za povezavo z socketi
-io.on('connection', (socket) => {
-    console.log('connected', socket.id);
+await connectToDatabase();
 
-    let n = 0;
-    const timer = setInterval(() => socket.emit('tick', n++), 1000);
-
-    socket.on('echo', (msg: string, ack?: (reply: string) => void) => {
-        console.log('echo:', msg);
-        ack?.(`server got: ${msg}`);
-    });
-
-    socket.on('disconnect', () => {
-        clearInterval(timer);
-        console.log('disconnected', socket.id);
-    });
-});
+// Definicija routov
+app.use('/api/quizzes', createQuizRouter(io));
 
 // Zagon strežnika
-server.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server runs on : http://localhost:${PORT}`);
+server.listen(parseInt(process.env.PORT!), '0.0.0.0', () => {
+    console.log(`Server runs on : http://localhost:${process.env.PORT}`);
 });
