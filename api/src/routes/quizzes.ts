@@ -28,6 +28,7 @@ export function createQuizRouter(io: Server) {
                 subject: subject,
                 difficulty: difficulty,
                 question_number: question_number,
+                active_question: -1,
                 questions: [],
                 players: []
             });
