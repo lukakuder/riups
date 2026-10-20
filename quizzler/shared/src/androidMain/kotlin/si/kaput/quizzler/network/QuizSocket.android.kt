@@ -21,7 +21,9 @@ actual object QuizSocket {
             val s = IO.socket(url)
 
             s.on(Socket.EVENT_CONNECT) {
-                if (cont.isActive) cont.resume(Unit)
+                if (cont.isActive) {
+                    cont.resume(Unit)
+                }
             }
             s.on(Socket.EVENT_CONNECT_ERROR) { args ->
                 if (cont.isActive) {
@@ -46,12 +48,16 @@ actual object QuizSocket {
 
             socket!!.emit("join", arrayOf(code, name), Ack { args ->
                 val res = args.firstOrNull() as? JSONObject
+
                 val result = if (res?.optBoolean("success") == true) {
                     Result.success(Unit)
                 } else {
                     Result.failure(Exception(res?.optString("error") ?: "Join failed"))
                 }
-                if (cont.isActive) cont.resume(result)
+
+                if (cont.isActive) {
+                    cont.resume(result)
+                }
             })
         }
 
