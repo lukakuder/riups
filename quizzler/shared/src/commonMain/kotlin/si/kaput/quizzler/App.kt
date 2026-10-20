@@ -23,10 +23,10 @@ fun App() {
                 HomeScreen(navController)
             }
             composable(Routes.CREATE_QUIZ) {
-                CreateQuizScreen()
+                CreateQuizScreen(navController)
             }
             composable(Routes.JOIN_QUIZ) {
-                JoinQuizScreen()
+                JoinQuizScreen(navController)
             }
         }
     }
