@@ -11,10 +11,17 @@ export async function startGame(io: Server, id: string) {
 
         const room = String(quiz.code);
 
-        for (const question of quiz.questions) {
+        for (let i = 0; i < quiz.questions.length; i++) {
+            const question = quiz.questions[i]!;
+
+            await Quiz.findByIdAndUpdate(id, { active_question: i + 1 });
+
             io.to(room).emit('question', question);
             setTimeout(() => {}, question.available_time);
             io.to(room).emit('question_end', question);
+
+            await Quiz.findByIdAndUpdate(id, { active_question: -1 });
+
             setTimeout(() => {}, 5000);
         }
 

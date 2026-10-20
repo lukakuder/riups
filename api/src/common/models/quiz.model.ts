@@ -10,6 +10,7 @@ const quizSchema = new Schema(
         difficulty: { type: Number, required: true },
         question_number: { type: Number, required: true },
         status: { type: String, required: true },
+        active_question: { type: Number, required: true },
 
         questions: [questionSchema],
         players: [playerSchema],
