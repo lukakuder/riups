@@ -1,7 +1,10 @@
 package si.kaput.quizzler
 
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -31,12 +34,16 @@ import io.socket.client.Socket
 private const val SERVER_URL = "http://10.0.2.2:3000"
 private const val LOCAL_NETWORK_PERMISSION = "android.permission.ACCESS_LOCAL_NETWORK"
 
+fun hasLocalNetwork(context: Context): Boolean =
+    Build.VERSION.SDK_INT < 37 ||
+            context.checkSelfPermission(LOCAL_NETWORK_PERMISSION) == PackageManager.PERMISSION_GRANTED
+
 @Composable
 fun SocketTestScreen() {
     val context = LocalContext.current
     val logs = remember { mutableStateListOf<String>() }
     var status by remember { mutableStateOf("connecting…") }
-    var allowed by remember { mutableStateOf(hasLocalNetwork()) }
+    var allowed by remember { mutableStateOf(hasLocalNetwork(context)) }
 
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -47,10 +54,7 @@ fun SocketTestScreen() {
     }
 
     val socket = remember {
-        IO.socket(
-            SERVER_URL,
-            IO.Options().apply { transports = arrayOf("websocket") }
-        )
+        IO.socket(SERVER_URL, IO.Options().apply { transports = arrayOf("websocket") })
     }
 
     DisposableEffect(allowed) {
@@ -59,6 +63,7 @@ fun SocketTestScreen() {
             return@DisposableEffect onDispose { }
         }
 
+        val mainHandler = Handler(Looper.getMainLooper())
         socket.on(Socket.EVENT_CONNECT) { status = "connected" }
         socket.on(Socket.EVENT_DISCONNECT) { status = "disconnected" }
         socket.on(Socket.EVENT_CONNECT_ERROR) { args ->
@@ -66,8 +71,10 @@ fun SocketTestScreen() {
             status = "error: ${err?.message} | cause: ${err?.cause?.message}"
         }
         socket.on("tick") { args ->
-            logs.add("tick ${args[0]}")
-            if (logs.size > 50) logs.removeAt(0)
+            mainHandler.post {
+                logs.add("tick ${args[0]}")
+                if (logs.size > 50) logs.removeAt(0)
+            }
         }
         socket.connect()
 
@@ -86,9 +93,7 @@ fun SocketTestScreen() {
         Button(
             enabled = allowed,
             onClick = {
-                socket.emit("echo", "hello", Ack { args ->
-                    logs.add("echo reply: ${args[0]}")
-                })
+                socket.emit("join", 395783, "player1")
             }
         ) {
             Text("Send echo")
@@ -98,8 +103,4 @@ fun SocketTestScreen() {
             items(logs.reversed()) { Text(it) }
         }
     }
-}
-
-fun hasLocalNetwork() {
-    Build.VERSION.SDK_INT < 37 || context.checkSelfPermission(LOCAL_NETWORK_PERMISSION) == PackageManager.PERMISSION_GRANTED
 }
