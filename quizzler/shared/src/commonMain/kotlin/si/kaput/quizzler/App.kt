@@ -6,11 +6,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-
 import si.kaput.quizzler.navigation.Routes
 import si.kaput.quizzler.screens.CreateQuizScreen
-import si.kaput.quizzler.screens.HomeScreen
 import si.kaput.quizzler.screens.JoinQuizScreen
+
 
 @Composable
 @Preview
@@ -20,7 +19,9 @@ fun App() {
 
         NavHost(navController = navController, startDestination = Routes.HOME) {
             composable(Routes.HOME) {
-                HomeScreen(navController)
+                HomeScreen(
+                    navController = navController
+                )
             }
             composable(Routes.CREATE_QUIZ) {
                 CreateQuizScreen(navController)
