@@ -47,12 +47,21 @@ fun HomeScreen(
                 contentDescription = "Quizzler logo",
                 modifier = Modifier.size(160.dp)
             )
-            Text(
-                "U", //TODO()
-                color = OurColors.Navy,
-                fontFamily = font,
-                fontWeight = FontWeight.Black
-            )
+            Box(
+                Modifier
+                    .size(44.dp)
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(OurColors.Blue),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    "U",
+                    color = Color.White,
+                    fontFamily = font,
+                    fontWeight = FontWeight.Black,
+                    fontSize = 24.sp,
+                )
+            }
         }
         Text(
             "Pick a quiz.\nChallange your friends.",
@@ -61,26 +70,17 @@ fun HomeScreen(
             lineHeight = 38.sp,
             fontWeight = FontWeight.ExtraBold,
         )
-        Spacer(Modifier.height(32.dp))
+        Spacer(Modifier.height(50.dp))
         Row(
             Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ){
             Text("What do you want to play?", color = OurColors.Navy, fontFamily = font, fontWeight = FontWeight.Bold, fontSize = 20.sp)
-            Text("Koliko online", color = OurColors.Navy, fontFamily = font, fontWeight = FontWeight.Bold, fontSize = 20.sp) //TODO()
+            Text("127 online", color = OurColors.Navy, fontFamily = font, fontWeight = FontWeight.Black, fontSize = 18.sp) //TODO()
         }
         Spacer(Modifier.height(12.dp))
         Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-            Card(
-                "Join random lobby",
-                "Play against random people.",
-                "⇄",
-                OurColors.Blue,
-                OurColors.BlueDark,
-                OurColors.Navy,
-                onClick = {}
-            )
             Card("Join with code",
                 "Your friends with invite code.",
                 "#",
@@ -138,27 +138,35 @@ private fun Card(
                     fontSize = 24.sp,
                 )
             }
-            Column(Modifier.weight(1f)){
-                Text(
-                    title,
-                    color = textColor,
-                    fontFamily = font,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp
-                )
-                Text(
-                    describtion,
-                    color = textColor.copy(alpha = 0.8f),
-                    fontFamily = font,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 12.sp
-                )
+
+            Row(
+                Modifier.fillMaxWidth().padding(end=10.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Column(Modifier.weight(1f)) {
+                    Text(
+                        title,
+                        color = textColor,
+                        fontFamily = font,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp
+                    )
+                    Text(
+                        describtion,
+                        color = textColor.copy(alpha = 0.8f),
+                        fontFamily = font,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 12.sp
+                    )
+
+                }
                 Text(
                     "↗",
                     color = textColor,
                     fontFamily = font,
                     fontWeight = FontWeight.Black,
-                    fontSize = 18.sp
+                    fontSize = 26.sp,
                 )
             }
         }
