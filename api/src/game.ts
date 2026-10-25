@@ -17,12 +17,14 @@ export async function startGame(io: Server, id: string) {
             await Quiz.findByIdAndUpdate(id, { active_question: i + 1 });
 
             io.to(room).emit('question', question);
-            setTimeout(() => {}, question.available_time);
+            //setTimeout(() => {}, question.available_time);
+            await sleep(question.available_time * 1000);
             io.to(room).emit('question_end', question);
 
             await Quiz.findByIdAndUpdate(id, { active_question: -1 });
 
-            setTimeout(() => {}, 5000);
+            //setTimeout(() => {}, 5000);
+            await sleep(5000);
         }
 
         const results = await Quiz.findById(id);
@@ -30,4 +32,10 @@ export async function startGame(io: Server, id: string) {
     } catch (error) {
         console.log(error);
     }
+}
+
+function sleep(milliseconds: number): Promise<void> {
+    return new Promise((resolve) => {
+        setTimeout(resolve, milliseconds);
+    });
 }
