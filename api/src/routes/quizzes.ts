@@ -4,13 +4,20 @@ import { QuizStatusEnum } from "../common/enums/quizStatusEnum.js";
 import { generateUniqueCode } from "../common/utils/quiz.util.js";
 import { Server } from "socket.io";
 import { startGame } from "../game.js";
+import { generateQuestions } from "../common/questions/question.generators.js";
 
 export function createQuizRouter(io: Server) {
     const router = Router();
 
     router.post('/', async (req: Request, res: Response) => {
         try {
-            const { name, subject, difficulty, question_number } = req.body ?? [];
+            const {
+                name,
+                subject,
+                difficulty,
+                question_number,
+                difficulty_mode
+            } = req.body ?? [];
 
             if (!name || !subject || !difficulty || !question_number) {
                 console.error('Missing required fields in request body');
@@ -21,6 +28,13 @@ export function createQuizRouter(io: Server) {
 
             const code = await generateUniqueCode();
 
+            const questions = generateQuestions(
+                subject,
+                difficulty,
+                question_number,
+                difficulty_mode ?? 'fixed'
+            );
+
             const quiz = await Quiz.create({
                 code: code,
                 status: QuizStatusEnum.WAITING,
@@ -29,7 +43,7 @@ export function createQuizRouter(io: Server) {
                 difficulty: difficulty,
                 question_number: question_number,
                 active_question: -1,
-                questions: [],
+                questions: questions,
                 players: []
             });
 
