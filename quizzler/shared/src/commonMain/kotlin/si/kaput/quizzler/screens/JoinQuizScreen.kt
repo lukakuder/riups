@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
@@ -21,7 +20,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,7 +30,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -47,7 +44,6 @@ import si.kaput.quizzler.components.NameInput
 import si.kaput.quizzler.components.QuizCodeInput
 import si.kaput.quizzler.network.BASE_URL
 import si.kaput.quizzler.network.QuizSocket
-import si.kaput.quizzler.nunito
 
 @Composable
 fun JoinQuizScreen(navController: NavController) {
@@ -57,9 +53,7 @@ fun JoinQuizScreen(navController: NavController) {
     var loading by remember { mutableStateOf(false) }
     var joined by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
-    val font = nunito()
-    val greyColor = Color(0xFFE2E8F0)
-    val lightBlueColor = Color(0xFF2563EB)
+
     Column(
         modifier = Modifier
             .safeContentPadding()
@@ -104,10 +98,10 @@ fun JoinQuizScreen(navController: NavController) {
                     .clip(RoundedCornerShape(20.dp)),
                 shape = RoundedCornerShape(20.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = lightBlueColor,
-                    contentColor = Color.White,
-                    disabledContainerColor = greyColor,
-                    disabledContentColor = Color.Gray
+                    containerColor = OurColors.Blue,
+                    contentColor = OurColors.White,
+                    disabledContainerColor = OurColors.LightGray,
+                    disabledContentColor = OurColors.Gray
                 ),
                 enabled = !loading && code.isNotBlank() && name.isNotBlank(),
                 onClick = {
