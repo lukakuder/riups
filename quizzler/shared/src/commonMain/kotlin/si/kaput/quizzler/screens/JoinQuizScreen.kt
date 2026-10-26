@@ -82,74 +82,77 @@ fun JoinQuizScreen(navController: NavController) {
         QuizCodeInput(code = code, onValueChange = { newInput ->
             code = newInput.filter { it.isDigit() }.take(6)
         })
+
+        Spacer(Modifier.height(12.dp))
+
         //OutlinedTextField(value = code, onValueChange = { code = it }, label = { Text("Quiz code") })
         NameInput(name = name, onNameChange = { name = it })
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 15.dp)
-                        .height(56.dp)
-                        .clip(RoundedCornerShape(20.dp))
-                        .background(if (!loading && code.isNotBlank() && name.isNotBlank()) Color(0xFF1D4ED8) else Color(0xFFCBD5E1))
-                    // ^ This is the dark "shadow" layer. We make it grey if disabled.
-                ) {
-                    Button(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp)
-                            .clip(RoundedCornerShape(20.dp)),
-                        shape = RoundedCornerShape(20.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = lightBlueColor,
-                            contentColor = Color.White,
-                            disabledContainerColor = greyColor,
-                            disabledContentColor = Color.Gray
-                        ),
-                        enabled = !loading && code.isNotBlank() && name.isNotBlank(),
-                        onClick = {
-                            scope.launch {
-                                loading = true
-                                error = null
-                                try {
-                                    QuizSocket.connect(BASE_URL)
-                                    QuizSocket.join(code.trim(), name.trim())
-                                        .onSuccess { joined = true }
-                                        .onFailure { error = it.message }
-                                } catch (e: Exception) {
-                                    error = e.message ?: "Something went wrong"
-                                } finally {
-                                    loading = false
-                                }
-                            }
-                        },
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                                contentDescription = null,
-                                modifier = Modifier.size(20.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = if (loading) "Joining..." else "Join lobby",
-                                fontWeight = FontWeight.ExtraBold,
-                                fontSize = 18.sp
-                            )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 15.dp)
+                .height(56.dp)
+                .clip(RoundedCornerShape(20.dp))
+                .background(if (!loading && code.isNotBlank() && name.isNotBlank()) Color(0xFF1D4ED8) else Color(0xFFCBD5E1))
+            // ^ This is the dark "shadow" layer. We make it grey if disabled.
+        ) {
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+                    .clip(RoundedCornerShape(20.dp)),
+                shape = RoundedCornerShape(20.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = lightBlueColor,
+                    contentColor = Color.White,
+                    disabledContainerColor = greyColor,
+                    disabledContentColor = Color.Gray
+                ),
+                enabled = !loading && code.isNotBlank() && name.isNotBlank(),
+                onClick = {
+                    scope.launch {
+                        loading = true
+                        error = null
+                        try {
+                            QuizSocket.connect(BASE_URL)
+                            QuizSocket.join(code.trim(), name.trim())
+                                .onSuccess { joined = true }
+                                .onFailure { error = it.message }
+                        } catch (e: Exception) {
+                            error = e.message ?: "Something went wrong"
+                        } finally {
+                            loading = false
                         }
                     }
+                },
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = if (loading) "Joining..." else "Join lobby",
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 18.sp
+                    )
                 }
+            }
+        }
 
+        Spacer(Modifier.height(12.dp))
         if (joined) {
             Text("Joined! Waiting for the host to start.")
         }
         error?.let {
             Text("Error: $it")
         }
-        Spacer(Modifier.weight(1f))
     }
 
 }

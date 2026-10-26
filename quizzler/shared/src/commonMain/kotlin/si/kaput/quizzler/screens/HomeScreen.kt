@@ -64,7 +64,7 @@ fun HomeScreen(
             }
         }
         Text(
-            "Pick a quiz.\nChallange your friends.",
+            "Pick a quiz.\nChallenge your friends.",
             color = OurColors.Navy,
             fontSize = 32.sp,
             lineHeight = 38.sp,
@@ -76,13 +76,13 @@ fun HomeScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ){
-            Text("What do you want to play?", color = OurColors.Navy, fontFamily = font, fontWeight = FontWeight.Bold, fontSize = 20.sp)
-            Text("127 online", color = OurColors.Navy, fontFamily = font, fontWeight = FontWeight.Black, fontSize = 18.sp) //TODO()
+            Text("What will you choose?", color = OurColors.Navy, fontFamily = font, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+//            Text("127 online", color = OurColors.Navy, fontFamily = font, fontWeight = FontWeight.Black, fontSize = 18.sp) //TODO()
         }
         Spacer(Modifier.height(12.dp))
         Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-            Card("Join with code",
-                "Your friends with invite code.",
+            Card("Join with a code",
+                "Join your friends with an invite code.",
                 "#",
                 OurColors.Yellow,
                 OurColors.YellowDark,
