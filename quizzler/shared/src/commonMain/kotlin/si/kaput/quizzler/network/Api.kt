@@ -29,4 +29,11 @@ object Api {
             setBody(request)
         }.body()
     }
+
+    suspend fun startQuiz(request: StartQuizRequest): QuizResponse {
+        return client.post("$BASE_URL/api/quizzes/start") {
+            contentType(ContentType.Application.Json)
+            setBody(request)
+        }.body()
+    }
 }

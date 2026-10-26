@@ -7,11 +7,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import si.kaput.quizzler.navigation.QuestionRoute
 import si.kaput.quizzler.navigation.Routes
+import si.kaput.quizzler.navigation.WaitingRoute
 import si.kaput.quizzler.screens.CreateQuizScreen
 import si.kaput.quizzler.screens.JoinQuizScreen
+import si.kaput.quizzler.screens.QuestionScreen
 import si.kaput.quizzler.screens.WaitingScreen
-import si.kaput.quizzler.network.WaitingRoute
 
 
 @Composable
@@ -35,6 +37,10 @@ fun App() {
             composable<WaitingRoute> { backStackEntry ->
                 val args = backStackEntry.toRoute<WaitingRoute>()
                 WaitingScreen(navController, args.code)
+            }
+            composable<QuestionRoute> { backStackEntry ->
+                val args = backStackEntry.toRoute<QuestionRoute>()
+                QuestionScreen(navController, args.code)
             }
         }
     }

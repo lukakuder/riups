@@ -49,11 +49,11 @@ import quizzler.shared.generated.resources.logo_quizzler
 import si.kaput.quizzler.OurColors
 import si.kaput.quizzler.common.QuizSubject
 import si.kaput.quizzler.components.TextInput
+import si.kaput.quizzler.navigation.WaitingRoute
 import si.kaput.quizzler.network.Api
 import si.kaput.quizzler.network.BASE_URL
 import si.kaput.quizzler.network.CreateQuizRequest
 import si.kaput.quizzler.network.QuizSocket
-import si.kaput.quizzler.network.WaitingRoute
 
 private const val MAX_QUESTIONS = 50
 

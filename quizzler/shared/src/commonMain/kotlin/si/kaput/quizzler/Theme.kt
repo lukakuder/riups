@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import javafx.scene.effect.Light
 import org.jetbrains.compose.resources.Font
 import quizzler.shared.generated.resources.Res
 import quizzler.shared.generated.resources.nunito_black
@@ -12,6 +13,7 @@ import quizzler.shared.generated.resources.nunito_extrabold
 
 object OurColors {
     val Background = Color(0xFFFAFAFA)
+    val LightBlue = Color(0xFFEFF6FF)
     val Blue = Color(0xFF0D6EFD)
     val DarkBlue = Color(0xFF0A58CA)
     val Yellow = Color(0xFFFDB827)

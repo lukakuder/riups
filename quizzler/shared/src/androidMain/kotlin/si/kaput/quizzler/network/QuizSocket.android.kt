@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.json.JSONArray
 import org.json.JSONObject
+import si.kaput.quizzler.common.Question
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
@@ -16,6 +17,9 @@ actual object QuizSocket {
     private var socket: Socket? = null;
     private val _players = MutableStateFlow<List<String>>(emptyList())
     actual val players: StateFlow<List<String>> = _players.asStateFlow()
+
+    private val _question = MutableStateFlow<Question?>(null)
+    actual val question: StateFlow<Question?> = _question.asStateFlow()
 
     actual suspend fun connect(url: String) {
         if (socket?.connected() == true) {
@@ -26,6 +30,14 @@ actual object QuizSocket {
         suspendCancellableCoroutine { cont ->
             val s = IO.socket(url)
 
+            s.on("question") { args ->
+                val obj = args.firstOrNull() as? JSONObject ?: return@on
+                _question.value = Question(
+                    title = obj.optString("title"),
+                    content = obj.optString("content"),
+                    availableTime = obj.optInt("available_time"),
+                )
+            }
             s.on("players") { args ->
                 val arr = args.firstOrNull() as? JSONArray ?: return@on
                 _players.value = List(arr.length()) { arr.getString(it) }
@@ -97,5 +109,6 @@ actual object QuizSocket {
         socket?.disconnect()
         socket = null
         _players.value = emptyList()
+        _question.value = null
     }
 }
