@@ -10,39 +10,77 @@ export function initializeSockets(server: http.Server): Server {
         console.log('connected', socket.id);
 
         socket.on('join', async (code: string, name: string, ack) => {
-            const quizCode = Number(code);
-            if (!Number.isInteger(quizCode)) {
-                return ack?.({ success: false, error: 'Invalid code' });
-            }
+            console.log('join', { code, name, socket: socket.id });
 
-            const quiz = await Quiz.findOneAndUpdate({
-                code: quizCode,
-                status: QuizStatusEnum.WAITING,
-                'players.socket': { $ne: socket.id },
-            }, {
-                $push: {
-                    players: {
-                        name,
-                        score: 0,
-                        correct_answers: 0,
-                        socket: socket.id
-                    },
-                },
-            }, { returnDocument: 'after' });
-
-            // Protects against double clicks and non existent quizzes
-            if (!quiz) {
-                const existing = await Quiz.findOne({ code: quizCode, 'players.socket': socket.id });
-                if (existing) {
-                    socket.join(code);
-                    return ack?.({ success: true });
+            try {
+                const quizCode = Number(code);
+                if (!Number.isInteger(quizCode)) {
+                    return ack?.({ success: false, error: 'Invalid code' });
                 }
 
-                return ack?.({ success: false, error: 'Quiz not found' });
-            }
+                const quiz = await Quiz.findOneAndUpdate({
+                    code: quizCode,
+                    status: QuizStatusEnum.WAITING,
+                    'players.socket': { $ne: socket.id },
+                }, {
+                    $push: {
+                        players: {
+                            name,
+                            score: 0,
+                            correct_answers: 0,
+                            socket: socket.id
+                        },
+                    },
+                }, { returnDocument: 'after' });
 
-            socket.join(code);
-            ack?.({ success: true });
+                if (!quiz) {
+                    const existing = await Quiz.findOne({ code: quizCode, 'players.socket': socket.id });
+                    if (existing) {
+                        socket.join(code);
+                        return ack?.({ success: true });
+                    }
+
+                    return ack?.({ success: false, error: 'Quiz not found' });
+                }
+
+                socket.join(code);
+
+                io.to(code).emit("players", quiz.players.map((p) => p.name));
+
+                ack?.({ success: true });
+            } catch (err) {
+                console.error('join error', err);
+                return ack?.({ success: false, error: 'Server error' });
+            }
+        });
+
+        socket.on("watch", async (code: string, ack) => {
+            console.log('watch', { code, socket: socket.id });
+
+            try {
+                const quizCode = Number(code);
+                if (!Number.isInteger(quizCode)) {
+                    return ack?.({ success: false, error: 'Invalid code' });
+                }
+
+                const quiz = await Quiz.findOne({
+                    code: quizCode,
+                    status: QuizStatusEnum.WAITING,
+                });
+
+                if (!quiz) {
+                    return ack?.({ success: false, error: "Quiz not found" });
+                }
+
+                socket.join(code);
+
+                socket.emit("players", quiz.players.map((p) => p.name));
+
+                ack?.({ success: true });
+            } catch (err) {
+                console.error('watch error', err);
+                return ack?.({ success: false, error: 'Server error' });
+            }
         });
 
         socket.on('answer', async (code: string, answer: string, ack) => {
@@ -106,8 +144,8 @@ export function initializeSockets(server: http.Server): Server {
             }
         });
 
-        socket.on('disconnect', () => {
-            console.log('disconnected', socket.id);
+        socket.on('disconnect', (reason: any) => {
+            console.log('disconnected', socket.id, reason);
         });
     });
 

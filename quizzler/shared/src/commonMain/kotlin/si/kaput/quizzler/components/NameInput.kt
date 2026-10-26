@@ -31,7 +31,6 @@ fun NameInput(
     name:String,
     onNameChange: (String) -> Unit,
     modifier: Modifier= Modifier
-
 ) {
     val hash = name.hashCode().absoluteValue
     val bgColor = Color.hsl((hash % 60).toFloat(), 0.8f, 0.7f)

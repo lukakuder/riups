@@ -59,19 +59,18 @@ export function createQuizRouter(io: Server) {
 
     router.post('/start', async (req: Request, res: Response) => {
         try {
-            const { id } = req.body ?? [];
+            console.log('Starting quiz with request body:', req.body);
+            const { code } = req.body ?? {};
+            const quizCode = Number(code);
 
-            if (!id) {
-                console.error('Missing required fields in request body');
-                return res.status(400).send({
-                    message: 'Missing required fields in request body'
-                });
+            if (!Number.isInteger(quizCode)) {
+                return res.status(400).send({ message: 'Invalid code' });
             }
 
-            const quiz = await Quiz.findByIdAndUpdate(
-                id,
+            const quiz = await Quiz.findOneAndUpdate(
+                { code: quizCode, status: QuizStatusEnum.WAITING },
                 { status: QuizStatusEnum.IN_PROGRESS },
-                { new: true }
+                { returnDocument: 'after' }
             );
 
             if (!quiz) {
@@ -79,21 +78,7 @@ export function createQuizRouter(io: Server) {
             }
 
             res.status(200).send(quiz);
-
             await startGame(io, String(quiz._id));
-
-            // for (const question in quiz.questions) {
-            //     io.to(String(quiz.code)).emit('question', question);
-            //
-            //     setTimeout()
-            //
-            //     io.to(String(quiz.code)).emit('question-end', question);
-            //
-            //     sleep(5seconds);
-            // }
-            //
-            // const results = await Quiz.findById(id);
-            // io.to(String(quiz.code)).emit('results', results);
         } catch (error) {
             console.error(error);
             res.status(400).send({

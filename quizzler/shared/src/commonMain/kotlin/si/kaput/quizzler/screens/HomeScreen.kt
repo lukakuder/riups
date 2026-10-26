@@ -64,8 +64,7 @@ fun HomeScreen(
             }
         }
         Text(
-            "Pick a quiz.\nChallange your friends.",
-            color = OurColors.Navy,
+            "Pick a quiz.\nChallenge your friends.",
             fontSize = 32.sp,
             lineHeight = 38.sp,
             fontWeight = FontWeight.ExtraBold,
@@ -76,17 +75,17 @@ fun HomeScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ){
-            Text("What do you want to play?", color = OurColors.Navy, fontFamily = font, fontWeight = FontWeight.Bold, fontSize = 20.sp)
-            Text("127 online", color = OurColors.Navy, fontFamily = font, fontWeight = FontWeight.Black, fontSize = 18.sp) //TODO()
+            Text("What will you choose?", fontFamily = font, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+//            Text("127 online", color = OurColors.Navy, fontFamily = font, fontWeight = FontWeight.Black, fontSize = 18.sp) //TODO()
         }
         Spacer(Modifier.height(12.dp))
         Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-            Card("Join with code",
-                "Your friends with invite code.",
+            Card("Join with a code",
+                "Join your friends with an invite code.",
                 "#",
                 OurColors.Yellow,
-                OurColors.YellowDark,
-                OurColors.Navy,
+                OurColors.DarkYellow,
+                OurColors.Black,
                 onClick = {
                     navController.navigate(Routes.JOIN_QUIZ)
                 }
@@ -95,8 +94,8 @@ fun HomeScreen(
                 "Pick a quiz preset and invite your friends",
                 "+",
                 OurColors.Green,
-                OurColors.GreenDark,
-                OurColors.Navy,
+                OurColors.DarkGreen,
+                OurColors.Black,
                 onClick = {
                     navController.navigate(Routes.CREATE_QUIZ)
                 }

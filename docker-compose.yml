@@ -1,14 +1,4 @@
 services:
-  api:
-    build: ./api
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./api/src:/api/src
-      - ./api/.env:/api/.env
-    depends_on:
-      - mongodb
-
   mongodb:
     image: mongo:latest
     restart: unless-stopped
@@ -20,3 +10,13 @@ services:
     volumes:
       - ./mongodb_data:/data/db
     command: ["mongod", "--bind_ip_all"]
+
+  api:
+    build: ./api
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./api/src:/api/src
+      - ./api/.env:/api/.env
+    depends_on:
+      - mongodb

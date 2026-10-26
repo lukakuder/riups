@@ -11,7 +11,10 @@ data class CreateQuizRequest(
     @SerialName("question_number") val questionNumber: Int,
 )
 @Serializable
+data class StartQuizRequest(
+    val code: Int
+)
+@Serializable
 data class QuizResponse(
-    // TODO: adjust this
     val code: Int,
 )

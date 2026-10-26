@@ -10,8 +10,10 @@ import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-// TODO: Load this from .env
-const val BASE_URL = "http://10.0.2.2:3000"
+// TODO: Load this from .env, uncomment the one below if only using emulated phones, fill in right ip below if usign real as well
+const val BASE_URL = "http://localhost:3000"
+//const val BASE_URL = "http://192.168.1.186:3000"
+
 
 object Api {
     private val client = HttpClient {
@@ -23,6 +25,13 @@ object Api {
 
     suspend fun createQuiz(request: CreateQuizRequest): QuizResponse {
         return client.post("$BASE_URL/api/quizzes") {
+            contentType(ContentType.Application.Json)
+            setBody(request)
+        }.body()
+    }
+
+    suspend fun startQuiz(request: StartQuizRequest): QuizResponse {
+        return client.post("$BASE_URL/api/quizzes/start") {
             contentType(ContentType.Application.Json)
             setBody(request)
         }.body()
