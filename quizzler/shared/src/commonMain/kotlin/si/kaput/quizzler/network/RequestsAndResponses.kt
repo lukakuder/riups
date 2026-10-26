@@ -15,3 +15,6 @@ data class QuizResponse(
     // TODO: adjust this
     val code: Int,
 )
+
+@Serializable
+data class WaitingRoute(val code: Int)

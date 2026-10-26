@@ -1,14 +1,15 @@
 // @ts-ignore
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import http from 'http';
-import dotenv from 'dotenv';
 import { connectToDatabase } from './config/db.js';
 import { createQuizRouter } from './routes/quizzes.js'
-import {initializeSockets} from "./sockets.js";
+import { initializeSockets } from "./sockets.js";
 
 const app = express();
 app.use(express.json());
-dotenv.config();
 
 const server = http.createServer(app);
 const io = initializeSockets(server);

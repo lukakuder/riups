@@ -3,13 +3,19 @@ package si.kaput.quizzler.network
 import io.socket.client.Ack
 import io.socket.client.IO
 import io.socket.client.Socket
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
+import org.json.JSONArray
 import org.json.JSONObject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 actual object QuizSocket {
     private var socket: Socket? = null;
+    private val _players = MutableStateFlow<List<String>>(emptyList())
+    actual val players: StateFlow<List<String>> = _players.asStateFlow()
 
     actual suspend fun connect(url: String) {
         if (socket?.connected() == true) {
@@ -20,6 +26,10 @@ actual object QuizSocket {
         suspendCancellableCoroutine { cont ->
             val s = IO.socket(url)
 
+            s.on("players") { args ->
+                val arr = args.firstOrNull() as? JSONArray ?: return@on
+                _players.value = List(arr.length()) { arr.getString(it) }
+            }
             s.on(Socket.EVENT_CONNECT) {
                 if (cont.isActive) {
                     cont.resume(Unit)
@@ -61,8 +71,31 @@ actual object QuizSocket {
             })
         }
 
+    actual suspend fun watch(code: String): Result<Unit> =
+        suspendCancellableCoroutine { cont ->
+            val s = socket
+            if (s == null) {
+                cont.resume(Result.failure(IllegalStateException("Not connected")))
+                return@suspendCancellableCoroutine
+            }
+            s.emit("watch", arrayOf(code)) { args ->
+                val res = args.firstOrNull() as? JSONObject
+
+                val result = if (res?.optBoolean("success") == true) {
+                    Result.success(Unit)
+                } else {
+                    Result.failure(Exception(res?.optString("error") ?: "Watch failed"))
+                }
+
+                if (cont.isActive) {
+                    cont.resume(result)
+                }
+            }
+        }
+
     actual fun disconnect() {
         socket?.disconnect()
         socket = null
+        _players.value = emptyList()
     }
 }

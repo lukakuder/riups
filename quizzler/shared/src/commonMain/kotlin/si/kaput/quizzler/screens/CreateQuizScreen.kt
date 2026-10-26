@@ -53,6 +53,7 @@ import si.kaput.quizzler.network.Api
 import si.kaput.quizzler.network.BASE_URL
 import si.kaput.quizzler.network.CreateQuizRequest
 import si.kaput.quizzler.network.QuizSocket
+import si.kaput.quizzler.network.WaitingRoute
 
 private const val MAX_QUESTIONS = 50
 
@@ -72,11 +73,13 @@ fun CreateQuizScreen(navController: NavController) {
 
     fun createQuiz() {
         val selectedCount = count ?: return
+
         scope.launch {
             loading = true
             error = null
-            try {
-                val quiz = Api.createQuiz(
+
+            val quiz = try {
+                Api.createQuiz(
                     CreateQuizRequest(
                         name = name.trim(),
                         subject = (if (isPhysics) QuizSubject.PHYSICS else QuizSubject.MATH).value,
@@ -84,13 +87,22 @@ fun CreateQuizScreen(navController: NavController) {
                         questionNumber = selectedCount,
                     )
                 )
-                QuizSocket.connect(BASE_URL)
-//                navController.navigate("waiting/${quiz.code}")
             } catch (e: Exception) {
-                error = e.message ?: "Error during quiz creation"
-            } finally {
+                error = "create: ${e.message}"
                 loading = false
+                return@launch
             }
+
+            try {
+                QuizSocket.connect(BASE_URL)
+            } catch (e: Exception) {
+                error = "socket: ${e.message}"
+                loading = false
+                return@launch
+            }
+
+            navController.navigate(WaitingRoute(quiz.code))
+            loading = false
         }
     }
 
