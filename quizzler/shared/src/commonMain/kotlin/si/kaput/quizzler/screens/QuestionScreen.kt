@@ -143,9 +143,11 @@ fun QuestionScreen(code: Int) {
     var submitted by remember { mutableStateOf<String?>(null) }
     var score by remember { mutableStateOf<Int?>(null) }
     var pendingScore by remember { mutableStateOf<Int?>(null) }
+    var showLeaderboard by remember { mutableStateOf(false) }
 
     LaunchedEffect(question) {
         val q = question ?: return@LaunchedEffect
+        showLeaderboard = false
         score = pendingScore
         submitted = null
         secondsLeft = q.availableTime
@@ -154,31 +156,36 @@ fun QuestionScreen(code: Int) {
             secondsLeft -= 1
         }
         score = pendingScore
+        showLeaderboard = true
     }
 
     val q = question ?: return
-
-    QuestionContent(
-        state = QuestionState(
-            questionNumber = q.index,
-            totalQuestions = q.total,
-            question = q.content,
-            secondsLeft = secondsLeft,
-            totalSeconds = q.availableTime,
-            submittedAnswer = submitted,
-            score = score
-        ),
-        onSubmit = { text ->
-            scope.launch {
-                QuizSocket.answer(code.toString(), text)
-                    .onSuccess { result ->
-                        submitted = text
-                        pendingScore = result.score
-                        if (secondsLeft <= 0) score = result.score
-                    }
-            }
-        },
-    )
+    if (showLeaderboard) {
+        LeaderboardScreen(code)
+    }
+    else{
+        QuestionContent(
+            state = QuestionState(
+                questionNumber = q.index,
+                totalQuestions = q.total,
+                question = q.content,
+                secondsLeft = secondsLeft,
+                totalSeconds = q.availableTime,
+                submittedAnswer = submitted,
+                score = score
+            ),
+            onSubmit = { text ->
+                scope.launch {
+                    QuizSocket.answer(code.toString(), text)
+                        .onSuccess { result ->
+                            submitted = text
+                            pendingScore = result.score
+                            if (secondsLeft <= 0) score = result.score
+                        }
+                }
+            },
+        )
+    }
 }
 
 
