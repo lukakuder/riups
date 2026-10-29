@@ -7,3 +7,7 @@ data class Question (
     val index: Int,
     val total: Int
 )
+data class AnswerResult(
+    val isCorrect: Boolean,
+    val score: Int,
+)

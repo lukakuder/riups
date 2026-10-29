@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.json.JSONArray
 import org.json.JSONObject
+import si.kaput.quizzler.common.AnswerResult
 import si.kaput.quizzler.common.Question
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -107,7 +108,7 @@ actual object QuizSocket {
             }
         }
 
-    actual suspend fun answer(code: String, answer: String): Result<Boolean> =
+    actual suspend fun answer(code: String, answer: String): Result<AnswerResult> =
         suspendCancellableCoroutine { cont ->
             val s = socket
             if (s == null) {
@@ -117,7 +118,7 @@ actual object QuizSocket {
             s.emit("answer", arrayOf(code, answer), Ack { args ->
                 val res = args.firstOrNull() as? JSONObject
                 val result = if (res?.optBoolean("success") == true) {
-                    Result.success(res.optBoolean("is_correct"))
+                    Result.success(AnswerResult(res.optBoolean("is_correct"), res.optInt("score")))
                 } else {
                     Result.failure(Exception(res?.optString("error") ?: "Answer failed"))
                 }

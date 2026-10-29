@@ -114,8 +114,9 @@ export function initializeSockets(server: http.Server): Server {
                 }
 
                 const is_correct = String(question.answer) === String(answer);
+                const points = is_correct ? 1 : 0; // TODO: change how scoring works
 
-                await Quiz.updateOne(
+                const updated = await Quiz.findOneAndUpdate(
                     {
                         code: quizCode,
                         status: QuizStatusEnum.IN_PROGRESS,
@@ -128,16 +129,24 @@ export function initializeSockets(server: http.Server): Server {
                         },
                     },
                     {
+
                         $set: { 'players.$.last_answered': quiz.active_question },
                         $inc: {
                             // TODO: change how scoring works
-                            'players.$.score': is_correct ? 1 : 0,
+                            'players.$.score': points,
                             'players.$.correct_answers': is_correct ? 1 : 0,
                         },
-                    }
-                );
+                    },
+                    { returnDocument: 'after' }
+                ).lean();
 
-                ack?.({ success: true, is_correct });
+                if (!updated) {
+                    return ack?.({ success: false, error: 'You have already tried answering this question' });
+                }
+
+                const me = updated.players.find(p => p.socket === socket.id);
+
+                ack?.({ success: true, is_correct, score: me?.score ?? 0 });
             } catch (err) {
                 console.error('answer error', err);
                 ack?.({ success: false, error: 'Server error' });
