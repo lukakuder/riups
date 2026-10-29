@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import javafx.scene.effect.Light
 import org.jetbrains.compose.resources.Font
 import quizzler.shared.generated.resources.Res
 import quizzler.shared.generated.resources.nunito_black
@@ -16,8 +15,10 @@ object OurColors {
     val LightBlue = Color(0xFFEFF6FF)
     val Blue = Color(0xFF0D6EFD)
     val DarkBlue = Color(0xFF0A58CA)
+    val TransparentBlue = Color(0xFFE8F1FF)
     val Yellow = Color(0xFFFDB827)
     val DarkYellow = Color(0xFFD99A0B)
+    val TransparentYellow = Color(0xFFFFF1CC)
     val Green = Color(0xFF06B472)
     val DarkGreen = Color(0xFF048A58)
     val Red = Color(0xFFE0304B)

@@ -10,5 +10,6 @@ expect object QuizSocket {
     suspend fun connect(url: String)
     suspend fun join(code: String, name: String): Result<Unit>
     suspend fun watch(code: String): Result<Unit>
+    suspend fun answer(code: String, answer: String): Result<Boolean>
     fun disconnect()
 }

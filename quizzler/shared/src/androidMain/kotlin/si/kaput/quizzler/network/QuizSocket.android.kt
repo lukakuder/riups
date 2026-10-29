@@ -36,6 +36,8 @@ actual object QuizSocket {
                     title = obj.optString("title"),
                     content = obj.optString("content"),
                     availableTime = obj.optInt("available_time"),
+                    index = obj.optInt("index"),
+                    total = obj.optInt("total")
                 )
             }
             s.on("players") { args ->
@@ -103,6 +105,26 @@ actual object QuizSocket {
                     cont.resume(result)
                 }
             }
+        }
+
+    actual suspend fun answer(code: String, answer: String): Result<Boolean> =
+        suspendCancellableCoroutine { cont ->
+            val s = socket
+            if (s == null) {
+                cont.resume(Result.failure(IllegalStateException("Not connected")))
+                return@suspendCancellableCoroutine
+            }
+            s.emit("answer", arrayOf(code, answer), Ack { args ->
+                val res = args.firstOrNull() as? JSONObject
+                val result = if (res?.optBoolean("success") == true) {
+                    Result.success(res.optBoolean("is_correct"))
+                } else {
+                    Result.failure(Exception(res?.optString("error") ?: "Answer failed"))
+                }
+                if (cont.isActive) {
+                    cont.resume(result)
+                }
+            })
         }
 
     actual fun disconnect() {
