@@ -20,7 +20,7 @@ export async function startGame(io: Server, id: string) {
 
             console.log(`Sending question ${i + 1} to room ${room}:`, question);
 
-            await Quiz.findByIdAndUpdate(id, { active_question: i });
+            await Quiz.findByIdAndUpdate(id, { active_question: i, correct_count: 0, question_started_at: new Date() });
 
             const { answer, ...publicQuestion } = question.toObject();
 

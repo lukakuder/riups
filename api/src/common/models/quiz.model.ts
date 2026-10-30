@@ -15,6 +15,9 @@ const quizSchema = new Schema(
 
         questions: [questionSchema],
         players: [playerSchema],
+
+        correct_count: { type: Number, default: 0 },
+        question_started_at: { type: Date }
     },
     {
         timestamps: true,
