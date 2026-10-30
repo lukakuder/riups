@@ -64,6 +64,7 @@ fun CreateQuizScreen(navController: NavController) {
     var isPhysics by remember { mutableStateOf(false) }
     var grade by remember { mutableIntStateOf(QuizSubject.MATH.difficulties.first()) }
     var difficulty by remember { mutableIntStateOf(1) }
+    var includeLowerGrades by remember { mutableStateOf(false) }
     var questionCount by remember { mutableStateOf("10") }
     var loading by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
@@ -87,6 +88,7 @@ fun CreateQuizScreen(navController: NavController) {
                         grade = grade,
                         difficulty = difficulty,
                         questionNumber = selectedCount,
+                        difficultyMode = if (includeLowerGrades) "progressive" else "fixed",
                     )
                 )
             } catch (e: Exception) {
@@ -228,6 +230,30 @@ fun CreateQuizScreen(navController: NavController) {
                         )
                     }
                 }
+            }
+        }
+
+        Spacer(Modifier.height(14.dp))
+
+        Column(Modifier.fillMaxWidth()) {
+            Row(verticalAlignment = Alignment.CenterVertically,) {
+                Text(
+                    text = "Include lower grades",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 15.sp,
+                )
+                Switch(
+                    checked = includeLowerGrades,
+                    onCheckedChange = { includeLowerGrades = it },
+                    modifier = Modifier.padding(horizontal = 12.dp),
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = OurColors.Blue,
+                        checkedTrackColor = OurColors.LightGray,
+                        uncheckedThumbColor = OurColors.Blue,
+                        uncheckedTrackColor = OurColors.LightGray,
+                        uncheckedBorderColor = OurColors.LightGray,
+                    ),
+                )
             }
         }
 
