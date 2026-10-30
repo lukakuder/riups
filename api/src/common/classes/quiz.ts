@@ -8,6 +8,7 @@ export class Quiz implements QuizInterface {
     code: number;
     name: string;
     subject: SubjectEnum;
+    grade: number;
     difficulty: number;
     question_number: number;
 
@@ -18,6 +19,7 @@ export class Quiz implements QuizInterface {
         id: number,
         name: string,
         subject: string,
+        grade: number,
         difficulty: number,
         question_number: number,
         code: number,
@@ -27,6 +29,7 @@ export class Quiz implements QuizInterface {
         this.code = code;
         this.name = name;
         this.subject = subject as SubjectEnum;
+        this.grade = grade;
         this.difficulty = difficulty;
         this.question_number = question_number;
         this.questions = questions;
