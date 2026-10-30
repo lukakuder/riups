@@ -7,6 +7,7 @@ import si.kaput.quizzler.common.Question
 expect object QuizSocket {
     val players: StateFlow<List<String>>
     val question: StateFlow<Question?>
+    val questionEnd: StateFlow<Int?>
 
     suspend fun connect(url: String)
     suspend fun join(code: String, name: String): Result<Unit>

@@ -1,6 +1,24 @@
 import { Server } from "socket.io";
 import { Quiz } from "./common/models/quiz.model.js";
 
+const waitingToAnswer = new Map<string, () => void>();
+
+export function finishQuestionEarly(room: string) {
+    waitingToAnswer.get(room)?.();
+}
+
+function waitForQuestion(room: string, ms: number): Promise<void> {
+    return new Promise((resolve) => {
+        const timer = setTimeout(done, ms);
+        function done() {
+            clearTimeout(timer);
+            waitingToAnswer.delete(room);
+            resolve();
+        }
+        waitingToAnswer.set(room, done);
+    });
+}
+
 export async function startGame(io: Server, id: string) {
     try {
         console.log(`Starting game for quiz with ID: ${id}`);
@@ -25,8 +43,8 @@ export async function startGame(io: Server, id: string) {
             const { answer, ...publicQuestion } = question.toObject();
 
             io.to(room).emit('question', {...publicQuestion, index: i + 1, total: quiz.questions.length,});
-            await sleep(question.available_time * 1000);
-            io.to(room).emit('question_end', question);
+            await waitForQuestion(room, question.available_time * 1000);
+            io.to(room).emit('question_end', { index: i + 1 });
 
             // TODO: Po tem ko to backend zazna (to je treba se dodat), naj se pokaze neki tranzition zaslon, da ni sam takojsna sprememba teksta vprasanja
 

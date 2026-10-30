@@ -3,6 +3,7 @@ import { Server } from "socket.io";
 import { Quiz } from "./common/models/quiz.model.js";
 import { QuizStatusEnum } from "./common/enums/quizStatusEnum.js";
 import { calculatePoints } from "./common/utils/scoring.util.js";
+import { finishQuestionEarly } from "./game.js";
 
 export function initializeSockets(server: http.Server): Server {
     const io = new Server(server, { cors: { origin: '*' } })
@@ -161,6 +162,13 @@ export function initializeSockets(server: http.Server): Server {
                 }
 
                 const me = updated.players.find(p => p.socket === socket.id);
+                
+                const everyoneAnswered = updated.players.every(
+                    p => p.last_answered === quiz.active_question
+                );
+                if (everyoneAnswered) {
+                    finishQuestionEarly(String(quizCode));
+                }
 
                 ack?.({ success: true, is_correct, points, score: me?.score ?? 0 });
             } catch (err) {

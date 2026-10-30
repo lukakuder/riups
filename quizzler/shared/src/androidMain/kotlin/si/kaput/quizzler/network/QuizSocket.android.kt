@@ -20,6 +20,8 @@ actual object QuizSocket {
     actual val players: StateFlow<List<String>> = _players.asStateFlow()
 
     private val _question = MutableStateFlow<Question?>(null)
+    private val _questionEnd = MutableStateFlow<Int?>(null)
+    actual val questionEnd: StateFlow<Int?> = _questionEnd.asStateFlow()
     actual val question: StateFlow<Question?> = _question.asStateFlow()
 
     actual suspend fun connect(url: String) {
@@ -40,6 +42,10 @@ actual object QuizSocket {
                     index = obj.optInt("index"),
                     total = obj.optInt("total")
                 )
+            }
+            s.on("question_end") { args ->
+                val obj = args.firstOrNull() as? JSONObject ?: return@on
+                _questionEnd.value = obj.optInt("index")
             }
             s.on("players") { args ->
                 val arr = args.firstOrNull() as? JSONArray ?: return@on
