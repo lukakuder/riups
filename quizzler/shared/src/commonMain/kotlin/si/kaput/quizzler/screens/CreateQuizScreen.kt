@@ -63,6 +63,8 @@ fun CreateQuizScreen(navController: NavController) {
     var name by remember { mutableStateOf("") }
     var isPhysics by remember { mutableStateOf(false) }
     var grade by remember { mutableIntStateOf(QuizSubject.MATH.difficulties.first()) }
+    var difficulty by remember { mutableIntStateOf(1) }
+    var includeLowerGrades by remember { mutableStateOf(false) }
     var questionCount by remember { mutableStateOf("10") }
     var loading by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
@@ -83,8 +85,10 @@ fun CreateQuizScreen(navController: NavController) {
                     CreateQuizRequest(
                         name = name.trim(),
                         subject = (if (isPhysics) QuizSubject.PHYSICS else QuizSubject.MATH).value,
-                        difficulty = grade,
+                        grade = grade,
+                        difficulty = difficulty,
                         questionNumber = selectedCount,
+                        difficultyMode = if (includeLowerGrades) "progressive" else "fixed",
                     )
                 )
             } catch (e: Exception) {
@@ -190,6 +194,66 @@ fun CreateQuizScreen(navController: NavController) {
                         )
                     }
                 }
+            }
+        }
+
+        Spacer(Modifier.height(14.dp))
+
+        Column(Modifier.fillMaxWidth()) {
+            Text(
+                text = "Difficulty",
+                fontWeight = FontWeight.Bold,
+                fontSize = 15.sp,
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                (1..3).forEach { d ->
+                    Row(
+                        modifier = Modifier.selectable(
+                            selected = difficulty == d,
+                            onClick = { difficulty = d },
+                            role = Role.RadioButton,
+                        ),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        RadioButton(
+                            selected = difficulty == d,
+                            onClick = null,
+                            colors = RadioButtonDefaults.colors(selectedColor = OurColors.Blue),
+                        )
+                        Spacer(Modifier.width(6.dp))
+                        Text(
+                            "$d",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp,
+                            color = (if (d == difficulty) OurColors.Blue else OurColors.Black)
+                        )
+                    }
+                }
+            }
+        }
+
+        Spacer(Modifier.height(14.dp))
+
+        Column(Modifier.fillMaxWidth()) {
+            Row(verticalAlignment = Alignment.CenterVertically,) {
+                Text(
+                    text = "Include lower grades",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 15.sp,
+                )
+                Switch(
+                    checked = includeLowerGrades,
+                    onCheckedChange = { includeLowerGrades = it },
+                    modifier = Modifier.padding(horizontal = 12.dp),
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = OurColors.Blue,
+                        checkedTrackColor = OurColors.LightGray,
+                        uncheckedThumbColor = OurColors.Blue,
+                        uncheckedTrackColor = OurColors.LightGray,
+                        uncheckedBorderColor = OurColors.LightGray,
+                    ),
+                )
             }
         }
 

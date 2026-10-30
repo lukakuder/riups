@@ -14,12 +14,13 @@ export function createQuizRouter(io: Server) {
             const {
                 name,
                 subject,
+                grade,
                 difficulty,
                 question_number,
                 difficulty_mode
             } = req.body ?? [];
 
-            if (!name || !subject || !difficulty || !question_number) {
+            if (!name || !subject || grade === undefined || difficulty === undefined || !question_number) {
                 console.error('Missing required fields in request body');
                 return res.status(400).send({
                     message: 'Missing required fields in request body'
@@ -30,6 +31,7 @@ export function createQuizRouter(io: Server) {
 
             const questions = generateQuestions(
                 subject,
+                grade,
                 difficulty,
                 question_number,
                 difficulty_mode ?? 'fixed'
@@ -40,6 +42,7 @@ export function createQuizRouter(io: Server) {
                 status: QuizStatusEnum.WAITING,
                 name: name,
                 subject: subject,
+                grade: grade,
                 difficulty: difficulty,
                 question_number: question_number,
                 active_question: -1,

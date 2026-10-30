@@ -8,6 +8,7 @@ export type DifficultyMode = "fixed" | "progressive";
 
 export function generateQuestions(
     subject: SubjectEnum,
+    grade: number,
     difficulty: number,
     count: number,
     mode: DifficultyMode = "fixed"
@@ -16,7 +17,7 @@ export function generateQuestions(
         throw new Error("Question count must be a positive integer");
     }
 
-    const generators = getGenerators(subject, difficulty, mode);
+    const generators = getGenerators(subject, grade, difficulty, mode);
     if (generators.length === 0) {
         throw new Error("No question generators available");
     }
@@ -32,10 +33,14 @@ export function generateQuestions(
 
 function getGenerators(
     subject: SubjectEnum,
+    grade: number,
     difficulty: number,
     mode: DifficultyMode = "fixed"
 ): QuestionGenerator[] {
-    if (!Number.isInteger(difficulty) || difficulty < 1 || difficulty > 9) {
+    if (!Number.isInteger(grade) || grade < 1 || grade > 9) {
+        throw new Error(`Unsupported math grade: ${grade}`);
+    }
+    if (!Number.isInteger(difficulty) || difficulty < 1 || difficulty > 3) {
         throw new Error(`Unsupported math difficulty: ${difficulty}`);
     }
     if (subject !== SubjectEnum.MATH) {
@@ -48,13 +53,11 @@ function getGenerators(
         throw new Error(`Unsupported difficulty mode: ${mode}`);
     }
 
-    const selectedGrade = Math.ceil(difficulty / 3) as GradeLevel;
+    const selectedGrade = Math.ceil(grade / 3) as GradeLevel;
     const grades = mode === "progressive"
         ? ([1, 2, 3].filter((grade) => grade <= selectedGrade) as GradeLevel[])
         : [selectedGrade];
-    const level = mode === "progressive"
-        ? 3
-        : ((difficulty - 1) % 3 + 1) as 1 | 2 | 3;
+    const level = difficulty as 1 | 2 | 3;
 
     return grades.flatMap((grade) => {
         switch (grade) {

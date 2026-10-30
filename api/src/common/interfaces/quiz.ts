@@ -7,6 +7,7 @@ export interface QuizInterface {
     code: number;
     name: string;
     subject: SubjectEnum;
+    grade: number;
     difficulty: number;
     question_number: number;
 
