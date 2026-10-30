@@ -12,6 +12,7 @@ import si.kaput.quizzler.navigation.Routes
 import si.kaput.quizzler.navigation.WaitingRoute
 import si.kaput.quizzler.screens.CreateQuizScreen
 import si.kaput.quizzler.screens.JoinQuizScreen
+import si.kaput.quizzler.screens.QuestionContent
 import si.kaput.quizzler.screens.QuestionScreen
 import si.kaput.quizzler.screens.WaitingScreen
 
@@ -40,7 +41,7 @@ fun App() {
             }
             composable<QuestionRoute> { backStackEntry ->
                 val args = backStackEntry.toRoute<QuestionRoute>()
-                QuestionScreen(navController, args.code)
+                QuestionScreen(args.code)
             }
         }
     }

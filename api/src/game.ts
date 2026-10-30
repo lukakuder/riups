@@ -22,7 +22,9 @@ export async function startGame(io: Server, id: string) {
 
             await Quiz.findByIdAndUpdate(id, { active_question: i });
 
-            io.to(room).emit('question', question);
+            const { answer, ...publicQuestion } = question.toObject();
+
+            io.to(room).emit('question', {...publicQuestion, index: i + 1, total: quiz.questions.length,});
             await sleep(question.available_time * 1000);
             io.to(room).emit('question_end', question);
 

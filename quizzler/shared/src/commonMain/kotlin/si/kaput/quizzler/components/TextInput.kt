@@ -23,6 +23,7 @@ fun TextInput(
     value: String,
     onValueChange: (String) -> Unit,
     placeholder: String = "",
+    readOnly: Boolean = false
 ) {
     Column {
         Text(
@@ -37,6 +38,7 @@ fun TextInput(
             modifier = Modifier.fillMaxWidth().height(60.dp),
             shape = RoundedCornerShape(16.dp),
             singleLine = true,
+            readOnly = readOnly,
             placeholder = {
                 Text(placeholder, color = Color.Gray, fontWeight = FontWeight.Bold, fontSize = 18.sp)
             },
