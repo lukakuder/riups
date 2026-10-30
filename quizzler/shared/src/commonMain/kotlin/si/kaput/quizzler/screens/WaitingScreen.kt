@@ -45,6 +45,7 @@ import org.jetbrains.compose.resources.painterResource
 import quizzler.shared.generated.resources.Res
 import quizzler.shared.generated.resources.logo_quizzler
 import si.kaput.quizzler.OurColors
+import si.kaput.quizzler.navigation.QuestionRoute
 import si.kaput.quizzler.network.Api
 import si.kaput.quizzler.network.QuizSocket
 import si.kaput.quizzler.network.StartQuizRequest
@@ -57,6 +58,12 @@ fun WaitingScreen(navController: NavController, quizCode: Int) {
     var starting by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
     val question by QuizSocket.question.collectAsState()
+
+    LaunchedEffect(question != null) {
+        if (question != null) {
+            navController.navigate(QuestionRoute(quizCode))
+        }
+    }
 
     LaunchedEffect(quizCode) {
         QuizSocket.watch(quizCode.toString())
