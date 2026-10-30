@@ -129,8 +129,18 @@ fun QuestionContent(
             onClick = { onSubmit(answer.trim())},
             enabled = answer.isNotBlank() && state.submittedAnswer == null,
             modifier = Modifier.fillMaxWidth().height(58.dp),
+            shape = RoundedCornerShape(20.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = OurColors.Blue,
+                contentColor = OurColors.White,
+                disabledContainerColor = OurColors.LightGray,
+                disabledContentColor = OurColors.Gray
+            ),
         ){
-            Text(if (state.submittedAnswer == null) "Submit" else "Answer sent")
+            Text(if (state.submittedAnswer == null) "Submit" else "Answer sent",
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 18.sp
+            )
         }
     }
 }
