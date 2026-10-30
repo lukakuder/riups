@@ -123,6 +123,7 @@ fun JoinQuizScreen(navController: NavController) {
                             loading = true
                             error = null
                             try {
+                                QuizSocket.disconnect()
                                 QuizSocket.connect(BASE_URL)
                                 QuizSocket.join(code.trim(), name.trim())
                                     .onSuccess { joined = true }

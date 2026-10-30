@@ -4,3 +4,4 @@ api/.yarn
 api/.pnp.cjs
 api/node_modules
 api/.env
+.DS_Store

@@ -2,6 +2,8 @@ import http from 'http';
 import { Server } from "socket.io";
 import { Quiz } from "./common/models/quiz.model.js";
 import { QuizStatusEnum } from "./common/enums/quizStatusEnum.js";
+import { calculatePoints } from "./common/utils/scoring.util.js";
+import { finishQuestionEarly } from "./game.js";
 
 export function initializeSockets(server: http.Server): Server {
     const io = new Server(server, { cors: { origin: '*' } })
@@ -114,25 +116,40 @@ export function initializeSockets(server: http.Server): Server {
                 }
 
                 const is_correct = String(question.answer) === String(answer);
-                const points = is_correct ? 1 : 0; // TODO: change how scoring works
-
-                const updated = await Quiz.findOneAndUpdate(
+                
+                const startedAt = quiz.question_started_at ? new Date(quiz.question_started_at).getTime() : Date.Now();
+                const elapsedMs = Date.now() - startedAt;
+                const totalMs = question.available_time * 1000;
+                
+                const claimed = await Quiz.findOneAndUpdate(
                     {
                         code: quizCode,
                         status: QuizStatusEnum.IN_PROGRESS,
                         active_question: quiz.active_question,
-                        players: {
-                            $elemMatch: {
-                                socket: socket.id,
-                                last_answered: { $ne: quiz.active_question },
-                            },
-                        },
+                        players: { $elemMatch: { socket: socket.id, last_answered: {$ne: quiz.active_question}}},
                     },
-                    {
+                    {$set: {'players.$.last_answered' : quiz.active_question}}
+                )
+                if(!claimed) {
+                    return ack?.({ success: false, error: 'You have already tried answering this question'});
+                }
 
-                        $set: { 'players.$.last_answered': quiz.active_question },
+                let place = 0;
+                if(is_correct) {
+                    const after = await Quiz.findOneAndUpdate(
+                        { _id: quiz._id},
+                        { $inc: { correct_count: 1}},
+                        { returnDocument: 'after'}
+                    ).lean();
+                    place = after!.correct_count;
+                }
+
+                const points = calculatePoints(is_correct, place, elapsedMs, totalMs);
+
+               const updated = await Quiz.findOneAndUpdate(
+                    { _id: quiz._id, 'players.socket': socket.id },
+                    {
                         $inc: {
-                            // TODO: change how scoring works
                             'players.$.score': points,
                             'players.$.correct_answers': is_correct ? 1 : 0,
                         },
@@ -145,8 +162,15 @@ export function initializeSockets(server: http.Server): Server {
                 }
 
                 const me = updated.players.find(p => p.socket === socket.id);
+                
+                const everyoneAnswered = updated.players.every(
+                    p => p.last_answered === quiz.active_question
+                );
+                if (everyoneAnswered) {
+                    finishQuestionEarly(String(quizCode));
+                }
 
-                ack?.({ success: true, is_correct, score: me?.score ?? 0 });
+                ack?.({ success: true, is_correct, points, score: me?.score ?? 0 });
             } catch (err) {
                 console.error('answer error', err);
                 ack?.({ success: false, error: 'Server error' });

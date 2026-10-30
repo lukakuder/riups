@@ -48,6 +48,7 @@ import quizzler.shared.generated.resources.Res
 import quizzler.shared.generated.resources.logo_quizzler
 import si.kaput.quizzler.OurColors
 import si.kaput.quizzler.common.QuizSubject
+import si.kaput.quizzler.components.NameInput
 import si.kaput.quizzler.components.TextInput
 import si.kaput.quizzler.navigation.WaitingRoute
 import si.kaput.quizzler.network.Api
@@ -68,6 +69,7 @@ fun CreateQuizScreen(navController: NavController) {
     var questionCount by remember { mutableStateOf("10") }
     var loading by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
+    var playerName by remember { mutableStateOf("") }
 
     val grades = if (isPhysics) QuizSubject.PHYSICS.difficulties else QuizSubject.MATH.difficulties
     val count = questionCount.toIntOrNull()
@@ -98,9 +100,17 @@ fun CreateQuizScreen(navController: NavController) {
             }
 
             try {
+                QuizSocket.disconnect()
                 QuizSocket.connect(BASE_URL)
             } catch (e: Exception) {
                 error = "socket: ${e.message}"
+                loading = false
+                return@launch
+            }
+
+            val joinResult = QuizSocket.join(quiz.code.toString(), playerName.trim())
+            if (joinResult.isFailure) {
+                error = "join: ${joinResult.exceptionOrNull()?.message}"
                 loading = false
                 return@launch
             }
@@ -128,6 +138,7 @@ fun CreateQuizScreen(navController: NavController) {
             onValueChange = { name = it },
             placeholder = "Math quiz",
         )
+        NameInput(name = playerName, onNameChange = { playerName = it })
 
         Spacer(Modifier.height(16.dp))
 
