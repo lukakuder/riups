@@ -31,7 +31,7 @@ fun QuizCodeInput(
 
     Column(modifier = modifier) {
         Text(
-            text = "6-digit lobby code",
+            text = "6-številčna koda",
             color = navyColor,
             fontWeight = FontWeight.Bold,
             fontSize = 14.sp,
@@ -45,7 +45,7 @@ fun QuizCodeInput(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier
                     .matchParentSize()
-                    .alpha(0f) // Invisible
+                    .alpha(0f)
             )
 
 

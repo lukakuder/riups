@@ -81,7 +81,7 @@ fun QuestionContent(
         ){
             Bubble(OurColors.TransparentBlue){
                 Text(
-                    "Question ${state.questionNumber} / ${state.totalQuestions}",
+                    "Vprašanje ${state.questionNumber} / ${state.totalQuestions}",
                     color = OurColors.Blue,
                     fontFamily = font,
                     fontWeight = FontWeight.ExtraBold, fontSize = 13.sp,
@@ -114,19 +114,24 @@ fun QuestionContent(
                 fontSize = 26.sp,
             )
         }
-        Spacer(Modifier.height(24.dp))
+
+        Spacer(Modifier.height(20.dp))
+
         Text(
-            "Score: ${state.score?.toString() ?: "0"}",
+            "Rezultat: ${state.score?.toString() ?: "0"}",
             color = OurColors.Black,
             fontFamily = font,
             fontWeight = FontWeight.Black,
             fontSize = 18.sp,
         )
+
+        Spacer(Modifier.height(10.dp))
+
         TextInput(
-            label = "Your answer",
+            label = "Tvoj odgovor",
             value = answer,
             onValueChange = { answer = it },
-            placeholder = "Type your answer",
+            placeholder = "Vpiši svoj odgovor",
             readOnly = state.submittedAnswer != null || state.secondsLeft <= 0
         )
         Spacer(Modifier.height(16.dp))
@@ -142,7 +147,7 @@ fun QuestionContent(
                 disabledContentColor = OurColors.Gray
             ),
         ){
-            Text(if (state.submittedAnswer == null) "Submit" else "Answer sent",
+            Text(if (state.submittedAnswer == null) "Oddaj odgovor" else "Odgovor oddan",
                 fontWeight = FontWeight.ExtraBold,
                 fontSize = 18.sp
             )
