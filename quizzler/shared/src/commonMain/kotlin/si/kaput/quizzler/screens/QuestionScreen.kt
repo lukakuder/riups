@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import si.kaput.quizzler.OurColors
+import si.kaput.quizzler.currentTimeMillis
 import si.kaput.quizzler.network.QuizSocket
 import si.kaput.quizzler.nunito
 import kotlin.time.Duration.Companion.milliseconds
@@ -149,13 +150,27 @@ fun QuestionContent(
 fun QuestionScreen(code: Int) {
     val question by QuizSocket.question.collectAsState()
     val endedIndex by QuizSocket.questionEnd.collectAsState()
+    val quizStartsAt by QuizSocket.quizStartsAt.collectAsState()
     val scope = rememberCoroutineScope()
 
+    var countdownSeconds by remember { mutableIntStateOf(0) }
     var secondsLeft by remember { mutableIntStateOf(0) }
     var submitted by remember { mutableStateOf<String?>(null) }
     var score by remember { mutableStateOf<Int?>(null) }
     var pendingScore by remember { mutableStateOf<Int?>(null) }
     var showLeaderboard by remember { mutableStateOf(false) }
+
+    LaunchedEffect(quizStartsAt, question) {
+        val startsAt = quizStartsAt ?: return@LaunchedEffect
+        while (question == null) {
+            countdownSeconds = maxOf(
+                0,
+                kotlin.math.ceil((startsAt - currentTimeMillis()) / 1000.0).toInt()
+            )
+            if (countdownSeconds == 0) break
+            delay(100.milliseconds)
+        }
+    }
 
     LaunchedEffect(question) {
         val q = question ?: return@LaunchedEffect
@@ -178,7 +193,11 @@ fun QuestionScreen(code: Int) {
         }
     }
 
-    val q = question ?: return
+    val q = question
+    if (q == null) {
+        CountdownContent(countdownSeconds)
+        return
+    }
     if (showLeaderboard) {
         LeaderboardScreen(code)
     }
@@ -203,6 +222,22 @@ fun QuestionScreen(code: Int) {
                         }
                 }
             },
+        )
+    }
+}
+
+@Composable
+private fun CountdownContent(seconds: Int) {
+    Box(
+        Modifier.fillMaxSize().background(OurColors.Background),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = seconds.toString(),
+            color = OurColors.Blue,
+            fontFamily = nunito(),
+            fontWeight = FontWeight.Black,
+            fontSize = 72.sp
         )
     }
 }
