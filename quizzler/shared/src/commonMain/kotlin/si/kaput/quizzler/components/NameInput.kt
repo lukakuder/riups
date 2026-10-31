@@ -40,7 +40,7 @@ fun NameInput(
         modifier = modifier
     ) {
         Text(
-            text = "Your nickname",
+            text = "Tvoj vzdevek",
             fontWeight = FontWeight.Bold,
             fontSize = 15.sp,
             modifier = Modifier.padding(bottom = 8.dp)
@@ -92,8 +92,6 @@ fun NameInput(
 
                 )
             },
-
-
         )
     }
 }

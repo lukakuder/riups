@@ -81,7 +81,7 @@ fun WaitingScreen(navController: NavController, quizCode: Int) {
             modifier = Modifier.size(160.dp)
         )
 
-        Text("Join with code", fontWeight = FontWeight.Bold, fontSize = 15.sp)
+        Text("Pridružitvena koda", fontWeight = FontWeight.Bold, fontSize = 15.sp)
         Spacer(Modifier.height(8.dp))
         Box(
             modifier = Modifier
@@ -106,8 +106,16 @@ fun WaitingScreen(navController: NavController, quizCode: Int) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Players", fontWeight = FontWeight.ExtraBold, fontSize = 18.sp)
-            Text("${players.size} joined", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Text("Igralci", fontWeight = FontWeight.ExtraBold, fontSize = 18.sp)
+
+            when (players.size) {
+                0 -> Text("${players.size} pridruženih", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                1 -> Text("${players.size} pridružen", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                2 -> Text("${players.size} pridružena", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                3 -> Text("${players.size} pridruženi", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                4 -> Text("${players.size} pridruženi", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                else -> Text("${players.size} pridruženih", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            }
         }
 
         Spacer(Modifier.height(12.dp))
@@ -119,7 +127,7 @@ fun WaitingScreen(navController: NavController, quizCode: Int) {
         ) {
             if (players.isEmpty()) {
                 Text(
-                    "Waiting for players to join...",
+                    "Čakanje da se pridružijo igralci...",
                     fontWeight = FontWeight.Bold,
                     color = Color.Gray,
                     modifier = Modifier
@@ -166,7 +174,6 @@ fun WaitingScreen(navController: NavController, quizCode: Int) {
                         Api.startQuiz(
                             StartQuizRequest(quizCode)
                         )
-                        // TODO: navigacija na zaslon z vprašanji
                     } catch (e: Exception) {
                         error = e.message ?: "Could not start quiz"
                     } finally {
@@ -182,7 +189,7 @@ fun WaitingScreen(navController: NavController, quizCode: Int) {
             )
             Spacer(Modifier.width(8.dp))
             Text(
-                text = if (starting) "Starting..." else "Start quiz",
+                text = if (starting) "Začenjanje kviza..." else "Začni kviz",
                 fontWeight = FontWeight.ExtraBold,
                 fontSize = 18.sp
             )
