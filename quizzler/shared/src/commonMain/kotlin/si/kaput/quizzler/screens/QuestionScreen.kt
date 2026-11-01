@@ -37,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import si.kaput.quizzler.OurColors
@@ -45,6 +46,7 @@ import si.kaput.quizzler.network.QuizSocket
 import si.kaput.quizzler.nunito
 import kotlin.time.Duration.Companion.milliseconds
 import si.kaput.quizzler.components.TextInput
+import si.kaput.quizzler.network.QuizSocket.playerName
 
 
 data class QuestionState(
@@ -62,10 +64,12 @@ data class QuestionState(
 fun QuestionContent(
     state: QuestionState,
     onSubmit: (String) -> Unit,
+
 ) {
     val font = nunito()
 
     var answer by remember(state.question) { mutableStateOf("") }
+    val playerName by QuizSocket.playerName.collectAsState()
 
     Column(
         Modifier.fillMaxSize().background(OurColors.Background).safeDrawingPadding().padding(24.dp)
@@ -147,12 +151,12 @@ fun QuestionContent(
 }
 
 @Composable
-fun QuestionScreen(code: Int) {
+fun QuestionScreen(code: Int, navController: NavController) {
     val question by QuizSocket.question.collectAsState()
     val endedIndex by QuizSocket.questionEnd.collectAsState()
     val quizStartsAt by QuizSocket.quizStartsAt.collectAsState()
+    val isGameOver by QuizSocket.isGameOver.collectAsState()
     val scope = rememberCoroutineScope()
-
     var countdownSeconds by remember { mutableIntStateOf(0) }
     var secondsLeft by remember { mutableIntStateOf(0) }
     var submitted by remember { mutableStateOf<String?>(null) }
@@ -198,8 +202,15 @@ fun QuestionScreen(code: Int) {
         CountdownContent(countdownSeconds)
         return
     }
+    if (isGameOver) {
+        FinalResultsScreen(
+            navController = navController,
+            totalQuestions = q.total
+        )
+        return
+    }
     if (showLeaderboard) {
-        LeaderboardScreen(code)
+        LeaderboardScreen(q.index, q.total, playerName)
     }
     else{
         QuestionContent(

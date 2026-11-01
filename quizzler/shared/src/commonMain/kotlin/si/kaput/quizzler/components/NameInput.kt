@@ -66,21 +66,12 @@ fun NameInput(
             ),
             leadingIcon = {
                 if(name.isNotEmpty()) {
-                    Box(
-                        modifier = Modifier
-                            .padding(start = 12.dp, end=12.dp)
-                            .size(36.dp)
-                            .clip(RoundedCornerShape(12.dp))
-                            .background(bgColor),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = name.take(1).uppercase().ifEmpty { "" },
-                            color = textColor,
-                            fontWeight = FontWeight.ExtraBold,
-                            fontSize = 18.sp
-                        )
-                    }
+                    PlayerAvatar(
+                        name = name,
+                        modifier = Modifier.padding(start = 12.dp, end = 12.dp),
+                        size = 36.dp,
+                        shape = RoundedCornerShape(12.dp)
+                    )
                 }
             },
             trailingIcon = {

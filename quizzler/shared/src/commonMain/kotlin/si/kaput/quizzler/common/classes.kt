@@ -11,3 +11,9 @@ data class AnswerResult(
     val isCorrect: Boolean,
     val score: Int,
 )
+
+data class PlayerScore(
+    val player: String,
+    val score: Int,
+    val delta: Int
+)
