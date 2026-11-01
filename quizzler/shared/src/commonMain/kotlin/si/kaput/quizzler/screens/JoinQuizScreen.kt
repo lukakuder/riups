@@ -56,10 +56,10 @@ fun JoinQuizScreen(navController: NavController) {
     var loading by remember { mutableStateOf(false) }
     var joined by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
-    val question by QuizSocket.question.collectAsState()
+    val quizStartsAt by QuizSocket.quizStartsAt.collectAsState()
 
-    LaunchedEffect(question != null) {
-        if (question != null) {
+    LaunchedEffect(quizStartsAt) {
+        if (quizStartsAt != null) {
             val codeInt = code.toIntOrNull()
             if (codeInt != null) {
                 navController.navigate(QuestionRoute(codeInt))
@@ -170,4 +170,3 @@ fun JoinQuizScreen(navController: NavController) {
     }
 
 }
-
