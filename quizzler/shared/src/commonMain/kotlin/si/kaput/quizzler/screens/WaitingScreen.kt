@@ -57,10 +57,10 @@ fun WaitingScreen(navController: NavController, quizCode: Int) {
     val scope = rememberCoroutineScope()
     var starting by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
-    val question by QuizSocket.question.collectAsState()
+    val quizStartsAt by QuizSocket.quizStartsAt.collectAsState()
 
-    LaunchedEffect(question != null) {
-        if (question != null) {
+    LaunchedEffect(quizStartsAt != null) {
+        if (quizStartsAt != null) {
             navController.navigate(QuestionRoute(quizCode))
         }
     }
