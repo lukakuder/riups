@@ -84,13 +84,13 @@ fun JoinQuizScreen(navController: NavController) {
                 modifier = Modifier.size(160.dp)
             )
         }
+
         QuizCodeInput(code = code, onValueChange = { newInput ->
             code = newInput.filter { it.isDigit() }.take(6)
         })
 
         Spacer(Modifier.height(12.dp))
 
-        //OutlinedTextField(value = code, onValueChange = { code = it }, label = { Text("Quiz code") })
         NameInput(name = name, onNameChange = { name = it })
 
         if (!joined) {
@@ -100,7 +100,7 @@ fun JoinQuizScreen(navController: NavController) {
                     .padding(top = 15.dp)
                     .height(56.dp)
                     .clip(RoundedCornerShape(20.dp))
-                    .background(if (!loading && code.isNotBlank() && name.isNotBlank()) Color(0xFF1D4ED8) else Color(0xFFCBD5E1))
+                    .background(if (!loading && code.isNotBlank() && name.isNotBlank()) OurColors.Blue else OurColors.LightGray)
             ) {
                 Button(
                     modifier = Modifier
@@ -144,7 +144,7 @@ fun JoinQuizScreen(navController: NavController) {
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = if (loading) "Joining..." else "Join lobby",
+                            text = if (loading) "Pridruževanje..." else "Pridruži se",
                             fontWeight = FontWeight.ExtraBold,
                             fontSize = 18.sp
                         )
@@ -156,7 +156,7 @@ fun JoinQuizScreen(navController: NavController) {
         Spacer(Modifier.height(12.dp))
         if (joined) {
             Text(
-                text = "Joined! Waiting for the host to start.",
+                text = "Pridružili ste se kvizu! Počakajte na začetek.",
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp
             )

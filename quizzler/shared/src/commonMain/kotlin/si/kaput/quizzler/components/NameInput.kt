@@ -84,8 +84,6 @@ fun NameInput(
 
                 )
             },
-
-
         )
     }
 }
