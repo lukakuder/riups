@@ -29,11 +29,6 @@ import si.kaput.quizzler.network.QuizSocket
 import si.kaput.quizzler.navigation.Routes
 import si.kaput.quizzler.nunito
 
-// You can move these into OurColors later
-val PodiumGold = Color(0xFFD4AF37)
-val PodiumSilver = Color(0xFFB0BEC5)
-val PodiumBronze = Color(0xFFCD7F32)
-
 @Composable
 fun FinalResultsScreen(
     navController: NavController,
@@ -52,12 +47,12 @@ fun FinalResultsScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
-            Modifier.clip(RoundedCornerShape(50)).background(Color(0xFFE8F5E9))
+            Modifier.clip(RoundedCornerShape(50)).background(OurColors.White)
                 .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
             Text(
                 "Konec igre • $totalQuestions vprašanj",
-                color = Color(0xFF1B5E20), fontWeight = FontWeight.ExtraBold, fontSize = 13.sp
+                color = OurColors.DarkGreen, fontWeight = FontWeight.ExtraBold, fontSize = 13.sp
             )
         }
 

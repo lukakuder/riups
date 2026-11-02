@@ -67,7 +67,6 @@ fun QuestionContent(
 
 ) {
     val font = nunito()
-
     var answer by remember(state.question) { mutableStateOf("") }
     val playerName by QuizSocket.playerName.collectAsState()
 

@@ -286,7 +286,7 @@ fun CreateQuizScreen(navController: NavController) {
                 .padding(top = 15.dp)
                 .height(56.dp)
                 .clip(RoundedCornerShape(20.dp))
-                .background(if (canStart) Color(0xFF1D4ED8) else Color(0xFFCBD5E1))
+                .background(if (canStart) OurColors.Blue else OurColors.LightGray)
         ) {
             Button(
                 modifier = Modifier
@@ -323,6 +323,6 @@ fun CreateQuizScreen(navController: NavController) {
         }
 
         Spacer(Modifier.height(12.dp))
-        error?.let { Text("Napaka: $it", color = Color(0xFFDC2626)) }
+        error?.let { Text("Napaka: $it", color = OurColors.Red) }
     }
 }

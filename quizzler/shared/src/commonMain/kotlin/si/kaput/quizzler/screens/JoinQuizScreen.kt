@@ -100,7 +100,7 @@ fun JoinQuizScreen(navController: NavController) {
                     .padding(top = 15.dp)
                     .height(56.dp)
                     .clip(RoundedCornerShape(20.dp))
-                    .background(if (!loading && code.isNotBlank() && name.isNotBlank()) Color(0xFF1D4ED8) else Color(0xFFCBD5E1))
+                    .background(if (!loading && code.isNotBlank() && name.isNotBlank()) OurColors.Blue else OurColors.LightGray)
             ) {
                 Button(
                     modifier = Modifier

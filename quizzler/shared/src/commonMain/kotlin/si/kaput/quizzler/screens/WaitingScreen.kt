@@ -147,7 +147,7 @@ fun WaitingScreen(navController: NavController, quizCode: Int) {
         error?.let {
             Text(
                 "Error: $it",
-                color = Color(0xFFDC2626),
+                color = OurColors.Red,
                 modifier = Modifier.padding(top = 8.dp)
             )
         }
@@ -226,6 +226,6 @@ private fun PlayerRow(name: String) {
             )
         }
         Spacer(Modifier.size(12.dp))
-        Text(name, fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Color(0xFF1E293B))
+        Text(name, fontWeight = FontWeight.Bold, fontSize = 18.sp)
     }
 }
