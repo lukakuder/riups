@@ -24,6 +24,8 @@ actual object QuizSocket {
     actual val questionEnd: StateFlow<Int?> = _questionEnd.asStateFlow()
     private val _quizStartsAt = MutableStateFlow<Long?>(null)
     actual val quizStartsAt: StateFlow<Long?> = _quizStartsAt.asStateFlow()
+    private val _serverTimeOffset = MutableStateFlow(0L)
+    actual val serverTimeOffset: StateFlow<Long> = _serverTimeOffset.asStateFlow()
     actual val question: StateFlow<Question?> = _question.asStateFlow()
 
     actual suspend fun connect(url: String) {
@@ -37,7 +39,10 @@ actual object QuizSocket {
 
             s.on("quiz_starting") { args ->
                 val obj = args.firstOrNull() as? JSONObject ?: return@on
-                _quizStartsAt.value = obj.optLong("startsAt")
+                val startsAt = obj.optLong("startsAt")
+                val serverNow = obj.optLong("serverNow")
+                _serverTimeOffset.value = serverNow - System.currentTimeMillis()
+                _quizStartsAt.value = startsAt
             }
             s.on("question") { args ->
                 val obj = args.firstOrNull() as? JSONObject ?: return@on
@@ -147,5 +152,6 @@ actual object QuizSocket {
         _question.value = null
         _questionEnd.value = null
         _quizStartsAt.value = null
+        _serverTimeOffset.value = 0L
     }
 }

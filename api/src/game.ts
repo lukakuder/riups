@@ -31,9 +31,10 @@ export async function startGame(io: Server, id: string) {
         }
 
         const room = String(quiz.code);
-        const startsAt = Date.now() + QUIZ_START_DELAY_MS;
+        const serverNow = Date.now();
+        const startsAt = serverNow + QUIZ_START_DELAY_MS;
         await Quiz.findByIdAndUpdate(id, { quiz_starts_at: new Date(startsAt) });
-        io.to(room).emit('quiz_starting', { startsAt });
+        io.to(room).emit('quiz_starting', { startsAt, serverNow });
         await sleep(Math.max(0, startsAt - Date.now()));
 
         // TODO: Dodaj neki quiz begin ki se posle na room, in se pokaze zaslon kao naj so vsi propravljeni

@@ -151,6 +151,7 @@ fun QuestionScreen(code: Int) {
     val question by QuizSocket.question.collectAsState()
     val endedIndex by QuizSocket.questionEnd.collectAsState()
     val quizStartsAt by QuizSocket.quizStartsAt.collectAsState()
+    val serverTimeOffset by QuizSocket.serverTimeOffset.collectAsState()
     val scope = rememberCoroutineScope()
 
     var countdownSeconds by remember { mutableIntStateOf(0) }
@@ -165,7 +166,9 @@ fun QuestionScreen(code: Int) {
         while (question == null) {
             countdownSeconds = maxOf(
                 0,
-                kotlin.math.ceil((startsAt - currentTimeMillis()) / 1000.0).toInt()
+                kotlin.math.ceil(
+                    (startsAt - (currentTimeMillis() + serverTimeOffset)) / 1000.0
+                ).toInt()
             )
             if (countdownSeconds == 0) break
             delay(100.milliseconds)
