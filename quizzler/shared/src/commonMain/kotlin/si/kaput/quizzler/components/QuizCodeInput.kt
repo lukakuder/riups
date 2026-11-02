@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import si.kaput.quizzler.OurColors
 
 @Composable
 fun QuizCodeInput(
@@ -24,15 +25,9 @@ fun QuizCodeInput(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val navyColor = Color(0xFF1E293B)
-    val activeBlue = Color(0xFF2563EB)
-    val activeBg = Color(0xFFEFF6FF)
-    val inactiveBorder = Color(0xFFE2E8F0)
-
     Column(modifier = modifier) {
         Text(
-            text = "6-digit lobby code",
-            color = navyColor,
+            text = "6-številčna koda",
             fontWeight = FontWeight.Bold,
             fontSize = 14.sp,
             modifier = Modifier.padding(bottom = 12.dp)
@@ -45,9 +40,8 @@ fun QuizCodeInput(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier
                     .matchParentSize()
-                    .alpha(0f) // Invisible
+                    .alpha(0f)
             )
-
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -62,17 +56,16 @@ fun QuizCodeInput(
                             .weight(1f)
                             .aspectRatio(0.85f)
                             .clip(RoundedCornerShape(12.dp))
-                            .background(if (isActive) activeBg else Color.White)
+                            .background(OurColors.White)
                             .border(
                                 width = if (isActive) 2.dp else 1.dp,
-                                color = if (isActive) activeBlue else inactiveBorder,
+                                color = if (isActive) OurColors.Blue else OurColors.Gray,
                                 shape = RoundedCornerShape(12.dp)
                             ),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
                             text = char,
-                            color = navyColor,
                             fontWeight = FontWeight.ExtraBold,
                             fontSize = 28.sp
                         )

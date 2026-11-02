@@ -1,4 +1,4 @@
-package si.kaput.quizzler
+package si.kaput.quizzler.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,6 +28,8 @@ import quizzler.shared.generated.resources.logo_quizzler
 import androidx.compose.ui.graphics.Color
 import si.kaput.quizzler.navigation.Routes
 import androidx.navigation.NavController
+import si.kaput.quizzler.OurColors
+import si.kaput.quizzler.nunito
 
 @Composable
 fun HomeScreen(
@@ -47,24 +49,9 @@ fun HomeScreen(
                 contentDescription = "Quizzler logo",
                 modifier = Modifier.size(160.dp)
             )
-            Box(
-                Modifier
-                    .size(44.dp)
-                    .clip(RoundedCornerShape(14.dp))
-                    .background(OurColors.Blue),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    "U",
-                    color = Color.White,
-                    fontFamily = font,
-                    fontWeight = FontWeight.Black,
-                    fontSize = 24.sp,
-                )
-            }
         }
         Text(
-            "Pick a quiz.\nChallenge your friends.",
+            "Ustvari kviz.\nIzzovi svoje prijatelje.",
             fontSize = 32.sp,
             lineHeight = 38.sp,
             fontWeight = FontWeight.ExtraBold,
@@ -75,13 +62,12 @@ fun HomeScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ){
-            Text("What will you choose?", fontFamily = font, fontWeight = FontWeight.Bold, fontSize = 20.sp)
-//            Text("127 online", color = OurColors.Navy, fontFamily = font, fontWeight = FontWeight.Black, fontSize = 18.sp) //TODO()
+            Text("Kaj boš izbral?", fontFamily = font, fontWeight = FontWeight.Bold, fontSize = 20.sp)
         }
         Spacer(Modifier.height(12.dp))
         Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-            Card("Join with a code",
-                "Join your friends with an invite code.",
+            Card("Pridružitev z kodo",
+                "Pridruži se svojim prijateljem z uporabo prijavne kode.",
                 "#",
                 OurColors.Yellow,
                 OurColors.DarkYellow,
@@ -90,8 +76,8 @@ fun HomeScreen(
                     navController.navigate(Routes.JOIN_QUIZ)
                 }
             )
-            Card("Create lobby",
-                "Pick a quiz preset and invite your friends",
+            Card("Ustvari kviz",
+                "Izberi predlogo za kviz in povabi svoje prijatelje",
                 "+",
                 OurColors.Green,
                 OurColors.DarkGreen,
@@ -107,7 +93,7 @@ fun HomeScreen(
 @Composable
 private fun Card(
     title: String,
-    describtion: String,
+    description: String,
     icon: String,
     color: Color,
     shadow: Color,
@@ -152,7 +138,7 @@ private fun Card(
                         fontSize = 18.sp
                     )
                     Text(
-                        describtion,
+                        description,
                         color = textColor.copy(alpha = 0.8f),
                         fontFamily = font,
                         fontWeight = FontWeight.Bold,

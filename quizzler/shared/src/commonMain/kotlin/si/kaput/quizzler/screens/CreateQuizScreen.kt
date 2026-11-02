@@ -133,19 +133,22 @@ fun CreateQuizScreen(navController: NavController) {
         )
 
         TextInput(
-            label = "Quiz name",
+            label = "Naslov kviza",
             value = name,
             onValueChange = { name = it },
-            placeholder = "Math quiz",
+            placeholder = "Matematični kviz",
         )
+
+        Spacer(Modifier.height(12.dp))
+
         NameInput(name = playerName, onNameChange = { playerName = it })
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(12.dp))
 
         Column(Modifier.fillMaxWidth()) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    "Math",
+                    "Matematika",
                     fontWeight = if (!isPhysics) FontWeight.ExtraBold else FontWeight.Normal,
                     fontSize = 18.sp
                 )
@@ -165,7 +168,7 @@ fun CreateQuizScreen(navController: NavController) {
                     ),
                 )
                 Text(
-                    "Physics",
+                    "Fizika",
                     fontWeight = if (isPhysics) FontWeight.ExtraBold else FontWeight.Normal,
                     fontSize = 18.sp
                 )
@@ -176,7 +179,7 @@ fun CreateQuizScreen(navController: NavController) {
 
         Column(Modifier.fillMaxWidth()) {
             Text(
-                text = "Grade",
+                text = "Razred",
                 fontWeight = FontWeight.Bold,
                 fontSize = 15.sp,
                 modifier = Modifier.padding(bottom = 4.dp)
@@ -212,7 +215,7 @@ fun CreateQuizScreen(navController: NavController) {
 
         Column(Modifier.fillMaxWidth()) {
             Text(
-                text = "Difficulty",
+                text = "Težavnost",
                 fontWeight = FontWeight.Bold,
                 fontSize = 15.sp,
                 modifier = Modifier.padding(bottom = 4.dp)
@@ -249,7 +252,7 @@ fun CreateQuizScreen(navController: NavController) {
         Column(Modifier.fillMaxWidth()) {
             Row(verticalAlignment = Alignment.CenterVertically,) {
                 Text(
-                    text = "Include lower grades",
+                    text = "Vključi nižje razrede",
                     fontWeight = FontWeight.Bold,
                     fontSize = 15.sp,
                 )
@@ -271,7 +274,7 @@ fun CreateQuizScreen(navController: NavController) {
         Spacer(Modifier.height(14.dp))
 
         TextInput(
-            label = "Number of questions (1–$MAX_QUESTIONS)",
+            label = "Število vprašanj (1–$MAX_QUESTIONS)",
             value = questionCount,
             onValueChange = { questionCount = it.filter(Char::isDigit).take(2) },
             placeholder = "10",
@@ -283,7 +286,7 @@ fun CreateQuizScreen(navController: NavController) {
                 .padding(top = 15.dp)
                 .height(56.dp)
                 .clip(RoundedCornerShape(20.dp))
-                .background(if (canStart) Color(0xFF1D4ED8) else Color(0xFFCBD5E1))
+                .background(if (canStart) OurColors.Blue else OurColors.LightGray)
         ) {
             Button(
                 modifier = Modifier
@@ -311,7 +314,7 @@ fun CreateQuizScreen(navController: NavController) {
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = if (loading) "Creating..." else "Start quiz",
+                        text = if (loading) "Ustvarjanje..." else "Ustvari kviz",
                         fontWeight = FontWeight.ExtraBold,
                         fontSize = 18.sp
                     )
@@ -320,6 +323,6 @@ fun CreateQuizScreen(navController: NavController) {
         }
 
         Spacer(Modifier.height(12.dp))
-        error?.let { Text("Error: $it", color = Color(0xFFDC2626)) }
+        error?.let { Text("Napaka: $it", color = OurColors.Red) }
     }
 }

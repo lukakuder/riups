@@ -20,10 +20,13 @@ export function initializeSockets(server: http.Server): Server {
                     return ack?.({ success: false, error: 'Invalid code' });
                 }
 
+                
+
                 const quiz = await Quiz.findOneAndUpdate({
                     code: quizCode,
                     status: QuizStatusEnum.WAITING,
                     'players.socket': { $ne: socket.id },
+                    'players.name': { $ne: name },
                 }, {
                     $push: {
                         players: {
@@ -37,9 +40,13 @@ export function initializeSockets(server: http.Server): Server {
 
                 if (!quiz) {
                     const existing = await Quiz.findOne({ code: quizCode, 'players.socket': socket.id });
+                    const existingName = await Quiz.exists({ code: quizCode, 'players.name': name })
                     if (existing) {
                         socket.join(code);
                         return ack?.({ success: true });
+                    }
+                    if (existingName) {
+                        return ack?.({ success: false, error: 'Name already taken' });
                     }
 
                     return ack?.({ success: false, error: 'Quiz not found' });

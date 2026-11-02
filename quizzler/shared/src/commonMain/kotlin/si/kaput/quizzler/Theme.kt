@@ -23,6 +23,10 @@ object OurColors {
     val DarkGreen = Color(0xFF048A58)
     val Red = Color(0xFFE0304B)
     val LightGray = Color(0xFFE2E8F0)
+    val Bronze = Color(0xFFCD7F32)
+    val Silver = Color(0xFFB0BEC5)
+    val Gold = Color(0xFFD4AF37)
+    val Navy = Color(0xFF1E293B)
     val Gray = Color.Gray
     val White = Color.White
     val Black = Color.Black

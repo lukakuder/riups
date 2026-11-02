@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.ui.graphics.luminance
+import si.kaput.quizzler.OurColors
 import kotlin.math.absoluteValue
 
 @Composable
@@ -34,13 +35,13 @@ fun NameInput(
 ) {
     val hash = name.hashCode().absoluteValue
     val bgColor = Color.hsl((hash % 60).toFloat(), 0.8f, 0.7f)
-    val textColor = if (bgColor.luminance() > 0.5f) Color.Black else Color.White
-    val navyColor = Color(0xFF1E293B)
+    val textColor = if (bgColor.luminance() > 0.5f) OurColors.Black else OurColors.White
+    val navyColor = OurColors.Navy
     Column(
         modifier = modifier
     ) {
         Text(
-            text = "Your nickname",
+            text = "Tvoj vzdevek",
             fontWeight = FontWeight.Bold,
             fontSize = 15.sp,
             modifier = Modifier.padding(bottom = 8.dp)
@@ -59,41 +60,30 @@ fun NameInput(
             ),
 
             colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White,
-                unfocusedBorderColor = Color(0xFFE2E8F0), // Light gray border
-                focusedBorderColor = Color(0xFF2563EB)    // Blue border when clicked
+                focusedContainerColor = OurColors.White,
+                unfocusedContainerColor = OurColors.White,
+                unfocusedBorderColor = OurColors.LightGray,
+                focusedBorderColor = OurColors.Blue
             ),
             leadingIcon = {
                 if(name.isNotEmpty()) {
-                    Box(
-                        modifier = Modifier
-                            .padding(start = 12.dp, end=12.dp)
-                            .size(36.dp)
-                            .clip(RoundedCornerShape(12.dp))
-                            .background(bgColor),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = name.take(1).uppercase().ifEmpty { "" },
-                            color = textColor,
-                            fontWeight = FontWeight.ExtraBold,
-                            fontSize = 18.sp
-                        )
-                    }
+                    PlayerAvatar(
+                        name = name,
+                        modifier = Modifier.padding(start = 12.dp, end = 12.dp),
+                        size = 36.dp,
+                        shape = RoundedCornerShape(12.dp)
+                    )
                 }
             },
             trailingIcon = {
                 Icon(
                     imageVector = Icons.Outlined.Edit,
-                    contentDescription = "Edit",
+                    contentDescription = "Uredi",
                     tint = Color.Gray,
                     modifier = Modifier.size(22.dp)
 
                 )
             },
-
-
         )
     }
 }
