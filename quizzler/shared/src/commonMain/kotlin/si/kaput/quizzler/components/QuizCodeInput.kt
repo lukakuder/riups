@@ -56,7 +56,7 @@ fun QuizCodeInput(
                             .weight(1f)
                             .aspectRatio(0.85f)
                             .clip(RoundedCornerShape(12.dp))
-                            .background(if (isActive) OurColors.White else OurColors.LightGray)
+                            .background(OurColors.White)
                             .border(
                                 width = if (isActive) 2.dp else 1.dp,
                                 color = if (isActive) OurColors.Blue else OurColors.Gray,
