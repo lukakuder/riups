@@ -64,7 +64,6 @@ function getGenerators(
             case 1:
                 return [
                     () => generateMultiplicationQuestion(level),
-                    () => generateDivisionQuestion(level),
                     () => generateAdditionSubtractionQuestion(level),
                     () => generateCompletionQuestion(level),
                     () => generateTimeAndUnitsQuestion(level),
@@ -73,7 +72,7 @@ function getGenerators(
                 ];
             case 2:
                 return [
-                    () => generateNaturalDivisionQuestion(level),
+                    () => generateDivisionQuestion(level),
                     () => generateFractionsQuestion(level),
                     () => generateAreaPerimeterQuestion(level),
                     () => generateExpressionsAndNumberLineQuestion(level),
@@ -85,6 +84,7 @@ function getGenerators(
                 ];
             case 3:
                 return [
+                    () => generateNaturalDivisionQuestion(level),
                     () => generatePercentagesQuestion(level),
                     () => generateLinearEquationQuestion(level),
                     () => generateFunctionsAndGraphsQuestion(level),
