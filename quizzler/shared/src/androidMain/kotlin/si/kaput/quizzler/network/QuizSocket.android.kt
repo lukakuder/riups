@@ -10,6 +10,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import org.json.JSONArray
 import org.json.JSONObject
 import si.kaput.quizzler.common.AnswerResult
+import si.kaput.quizzler.common.PlayerScore
 import si.kaput.quizzler.common.Question
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -17,6 +18,12 @@ import kotlin.coroutines.resumeWithException
 actual object QuizSocket {
     private var socket: Socket? = null;
     private val _players = MutableStateFlow<List<String>>(emptyList())
+    private val _leaderboard = MutableStateFlow<List<PlayerScore>>(emptyList())
+    private val _playerName = MutableStateFlow<String>("")
+    private val _isGameOver = MutableStateFlow<Boolean>(false)
+    actual val isGameOver: StateFlow<Boolean> = _isGameOver.asStateFlow()
+    actual val playerName: StateFlow<String> = _playerName.asStateFlow()
+    actual val leaderboard: StateFlow<List<PlayerScore>> = _leaderboard.asStateFlow()
     actual val players: StateFlow<List<String>> = _players.asStateFlow()
 
     private val _question = MutableStateFlow<Question?>(null)
@@ -38,6 +45,7 @@ actual object QuizSocket {
             s.on("quiz_starting") { args ->
                 val obj = args.firstOrNull() as? JSONObject ?: return@on
                 _quizStartsAt.value = obj.optLong("startsAt")
+                _isGameOver.value = false
             }
             s.on("question") { args ->
                 val obj = args.firstOrNull() as? JSONObject ?: return@on
@@ -50,8 +58,17 @@ actual object QuizSocket {
                 )
             }
             s.on("question_end") { args ->
+                println("RAW question_end: ${args.firstOrNull()}")
                 val obj = args.firstOrNull() as? JSONObject ?: return@on
+                val arr = obj.optJSONArray("leaderboard") ?: JSONArray()
                 _questionEnd.value = obj.optInt("index")
+                _leaderboard.value = List(arr.length()) { i ->
+                    val o = arr.getJSONObject(i)
+                    val name = o.optString("player")
+                    val newScore = o.optInt("score")
+                    val oldScore = _leaderboard.value.find { it.player == name }?.score ?: 0
+                    PlayerScore(name, newScore, newScore - oldScore)
+                }
             }
             s.on("players") { args ->
                 val arr = args.firstOrNull() as? JSONArray ?: return@on
@@ -68,6 +85,10 @@ actual object QuizSocket {
                         Exception(args.firstOrNull()?.toString() ?: "Connection failed")
                     )
                 }
+            }
+
+            s.on("results") { args ->
+                _isGameOver.value = true
             }
 
             socket = s
@@ -87,6 +108,7 @@ actual object QuizSocket {
                 val res = args.firstOrNull() as? JSONObject
 
                 val result = if (res?.optBoolean("success") == true) {
+                    _playerName.value = name
                     Result.success(Unit)
                 } else {
                     Result.failure(Exception(res?.optString("error") ?: "Join failed"))

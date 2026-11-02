@@ -20,6 +20,12 @@ function waitForQuestion(room: string, ms: number): Promise<void> {
     });
 }
 
+function toLeaderboard(players: any[]) {
+    return players
+        .map(p => ({ player: p.name, score: p.score }))
+        .sort((a, b) => b.score - a.score);
+}
+
 export async function startGame(io: Server, id: string) {
     try {
         console.log(`Starting game for quiz with ID: ${id}`);
@@ -49,7 +55,13 @@ export async function startGame(io: Server, id: string) {
 
             io.to(room).emit('question', {...publicQuestion, index: i + 1, total: quiz.questions.length,});
             await waitForQuestion(room, question.available_time * 1000);
-            io.to(room).emit('question_end', { index: i + 1 });
+            const fresh = await Quiz.findById(id).lean();
+            io.to(room).emit('question_end', {
+                index: i + 1,
+                leaderboard: toLeaderboard(fresh?.players ?? []),
+            });
+            console.log("update leaderboard");
+            await sleep(3000); // čakanje za prikaz leaderboarda in rezultatov
 
             // TODO: Po tem ko to backend zazna (to je treba se dodat), naj se pokaze neki tranzition zaslon, da ni sam takojsna sprememba teksta vprasanja
 

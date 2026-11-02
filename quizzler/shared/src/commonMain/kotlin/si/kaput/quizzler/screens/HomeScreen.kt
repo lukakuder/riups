@@ -1,4 +1,4 @@
-package si.kaput.quizzler
+package si.kaput.quizzler.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,6 +28,8 @@ import quizzler.shared.generated.resources.logo_quizzler
 import androidx.compose.ui.graphics.Color
 import si.kaput.quizzler.navigation.Routes
 import androidx.navigation.NavController
+import si.kaput.quizzler.OurColors
+import si.kaput.quizzler.nunito
 
 @Composable
 fun HomeScreen(
@@ -76,7 +78,6 @@ fun HomeScreen(
             verticalAlignment = Alignment.CenterVertically
         ){
             Text("What will you choose?", fontFamily = font, fontWeight = FontWeight.Bold, fontSize = 20.sp)
-//            Text("127 online", color = OurColors.Navy, fontFamily = font, fontWeight = FontWeight.Black, fontSize = 18.sp) //TODO()
         }
         Spacer(Modifier.height(12.dp))
         Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
@@ -107,7 +108,7 @@ fun HomeScreen(
 @Composable
 private fun Card(
     title: String,
-    describtion: String,
+    description: String,
     icon: String,
     color: Color,
     shadow: Color,
@@ -152,7 +153,7 @@ private fun Card(
                         fontSize = 18.sp
                     )
                     Text(
-                        describtion,
+                        description,
                         color = textColor.copy(alpha = 0.8f),
                         fontFamily = font,
                         fontWeight = FontWeight.Bold,
