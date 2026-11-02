@@ -19,10 +19,10 @@ import si.kaput.quizzler.OurColors
 @Composable
 fun LeaderboardRow(rank: Int, playerName: String, score: Int, delta: Int, isMe: Boolean) {
     val rankColor = when (rank) {
-        1 -> Color(0xFFD4AF37) // Gold
-        2 -> Color(0xFFB0B0B0) // Silver
-        3 -> Color(0xFFCD7F32) // Bronze
-        else -> Color.LightGray.copy(alpha = 0.4f)
+        1 -> OurColors.Gold
+        2 -> OurColors.Silver
+        3 -> OurColors.Bronze
+        else -> OurColors.LightGray.copy(alpha = 0.4f)
     }
 
     val bgColor = if (isMe) OurColors.TransparentBlue else OurColors.White
@@ -33,7 +33,6 @@ fun LeaderboardRow(rank: Int, playerName: String, score: Int, delta: Int, isMe: 
             .then(borderMod).padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Rank Badge
         Box(
             Modifier.size(36.dp).clip(RoundedCornerShape(15.dp)).background(rankColor),
             contentAlignment = Alignment.Center
@@ -53,7 +52,7 @@ fun LeaderboardRow(rank: Int, playerName: String, score: Int, delta: Int, isMe: 
         Column(Modifier.weight(1f)) {
             Text(playerName, fontWeight = FontWeight.ExtraBold, fontSize = 16.sp, color = OurColors.Black)
             if (isMe) {
-                Text("You", color = OurColors.Blue, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                Text("Ti", color = OurColors.Blue, fontSize = 12.sp, fontWeight = FontWeight.Bold)
             }
         }
 
@@ -63,7 +62,7 @@ fun LeaderboardRow(rank: Int, playerName: String, score: Int, delta: Int, isMe: 
             if (delta != 0) {
                 Text(
                     text = if (delta > 0) "+$delta" else "$delta",
-                    color = if (delta > 0) Color(0xFF00C853) else Color.Red,
+                    color = if (delta > 0) OurColors.Green else OurColors.Red,
                     fontSize = 12.sp, fontWeight = FontWeight.Bold
                 )
             }

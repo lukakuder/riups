@@ -42,6 +42,7 @@ fun FinalResultsScreen(
     val leaderboard by QuizSocket.leaderboard.collectAsState()
     val currentPlayerName by QuizSocket.playerName.collectAsState()
     val font = nunito()
+    val myRank = leaderboard.indexOfFirst { it.player == currentPlayerName } + 1
 
     val top3 = leaderboard.take(3)
     val rest = leaderboard.drop(3)
@@ -55,13 +56,14 @@ fun FinalResultsScreen(
                 .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
             Text(
-                "Game over • $totalQuestions questions",
+                "Konec igre • $totalQuestions vprašanj",
                 color = Color(0xFF1B5E20), fontWeight = FontWeight.ExtraBold, fontSize = 13.sp
             )
         }
 
         Spacer(Modifier.height(16.dp))
-        Text("Final results", fontSize = 36.sp, fontWeight = FontWeight.Black, color = OurColors.Black, fontFamily = font)
+        Text("Končni rezultati ", fontSize = 36.sp, fontWeight = FontWeight.Black, color = OurColors.Black, fontFamily = font)
+        Text("${myRank ?: "-"}. mesto", fontSize = 20.sp, fontWeight = FontWeight.Bold)
         Spacer(Modifier.height(32.dp))
 
         if (top3.isNotEmpty()) {
@@ -70,9 +72,9 @@ fun FinalResultsScreen(
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                PodiumStep(top3.getOrNull(1), 2, 120.dp, PodiumSilver, font)
-                PodiumStep(top3.getOrNull(0), 1, 150.dp, PodiumGold, font)
-                PodiumStep(top3.getOrNull(2), 3, 90.dp, PodiumBronze, font)
+                PodiumStep(top3.getOrNull(1), 2, 120.dp, OurColors.Silver, font)
+                PodiumStep(top3.getOrNull(0), 1, 150.dp, OurColors.Gold, font)
+                PodiumStep(top3.getOrNull(2), 3, 90.dp, OurColors.Bronze, font)
             }
         }
 
@@ -105,7 +107,7 @@ fun FinalResultsScreen(
             shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.buttonColors(containerColor = OurColors.Blue)
         ) {
-            Text("Back to Home", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
+            Text("Na domačo stran", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
         }
     }
 }
@@ -134,7 +136,7 @@ private fun PodiumStep(
                     fontFamily = font,
                     maxLines = 1
                 )
-                Text("${player.score}", fontWeight = FontWeight.Black, color = Color.Gray, fontSize = 13.sp)
+                Text("${player.score}", fontWeight = FontWeight.Black, color = OurColors.Gray, fontSize = 13.sp)
             }
         }
 
@@ -148,7 +150,7 @@ private fun PodiumStep(
                 .background(color),
             contentAlignment = Alignment.Center
         ) {
-            Text("$rank", fontSize = 40.sp, fontWeight = FontWeight.Black, color = Color.White)
+            Text("$rank", fontSize = 40.sp, fontWeight = FontWeight.Black, color = OurColors.White)
         }
     }
 }

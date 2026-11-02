@@ -43,7 +43,7 @@ fun LeaderboardScreen(
         }
 
         Spacer(Modifier.height(16.dp))
-        Text("Leaderboard", fontSize = 32.sp, fontWeight = FontWeight.Black, color = OurColors.Black)
+        Text("Lestvica", fontSize = 32.sp, fontWeight = FontWeight.Black, color = OurColors.Black)
         Spacer(Modifier.height(24.dp))
 
         LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
