@@ -84,6 +84,7 @@ fun JoinQuizScreen(navController: NavController) {
                 modifier = Modifier.size(160.dp)
             )
         }
+
         QuizCodeInput(code = code, onValueChange = { newInput ->
             code = newInput.filter { it.isDigit() }.take(6)
         })
