@@ -84,8 +84,6 @@ fun JoinQuizScreen(navController: NavController) {
                 modifier = Modifier.size(160.dp)
             )
         }
-//        Text("Join quiz")
-//        Button(onClick = { navController.popBackStack() }) { Text("Back") }
         QuizCodeInput(code = code, onValueChange = { newInput ->
             code = newInput.filter { it.isDigit() }.take(6)
         })
@@ -103,7 +101,6 @@ fun JoinQuizScreen(navController: NavController) {
                     .height(56.dp)
                     .clip(RoundedCornerShape(20.dp))
                     .background(if (!loading && code.isNotBlank() && name.isNotBlank()) Color(0xFF1D4ED8) else Color(0xFFCBD5E1))
-                // ^ This is the dark "shadow" layer. We make it grey if disabled.
             ) {
                 Button(
                     modifier = Modifier

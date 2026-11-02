@@ -29,13 +29,13 @@ fun LeaderboardRow(rank: Int, playerName: String, score: Int, delta: Int, isMe: 
     val borderMod = if (isMe) Modifier.border(2.dp, OurColors.Blue, RoundedCornerShape(20.dp)) else Modifier
 
     Row(
-        Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).background(bgColor)
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(bgColor)
             .then(borderMod).padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Rank Badge
         Box(
-            Modifier.size(36.dp).clip(RoundedCornerShape(10.dp)).background(rankColor),
+            Modifier.size(36.dp).clip(RoundedCornerShape(15.dp)).background(rankColor),
             contentAlignment = Alignment.Center
         ) {
             Text("$rank", fontWeight = FontWeight.Black, color = OurColors.White)
@@ -50,7 +50,6 @@ fun LeaderboardRow(rank: Int, playerName: String, score: Int, delta: Int, isMe: 
         )
         Spacer(Modifier.width(12.dp))
 
-        // Name and "You" indicator
         Column(Modifier.weight(1f)) {
             Text(playerName, fontWeight = FontWeight.ExtraBold, fontSize = 16.sp, color = OurColors.Black)
             if (isMe) {

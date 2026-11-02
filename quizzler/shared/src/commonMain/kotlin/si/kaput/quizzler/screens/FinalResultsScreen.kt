@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -27,6 +28,11 @@ import si.kaput.quizzler.components.PlayerAvatar
 import si.kaput.quizzler.network.QuizSocket
 import si.kaput.quizzler.navigation.Routes
 import si.kaput.quizzler.nunito
+
+// You can move these into OurColors later
+val PodiumGold = Color(0xFFD4AF37)
+val PodiumSilver = Color(0xFFB0BEC5)
+val PodiumBronze = Color(0xFFCD7F32)
 
 @Composable
 fun FinalResultsScreen(
@@ -44,7 +50,6 @@ fun FinalResultsScreen(
         Modifier.fillMaxSize().background(OurColors.Background).safeDrawingPadding().padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Header Bubble
         Box(
             Modifier.clip(RoundedCornerShape(50)).background(Color(0xFFE8F5E9))
                 .padding(horizontal = 16.dp, vertical = 8.dp)
@@ -59,22 +64,20 @@ fun FinalResultsScreen(
         Text("Final results", fontSize = 36.sp, fontWeight = FontWeight.Black, color = OurColors.Black, fontFamily = font)
         Spacer(Modifier.height(32.dp))
 
-        // Podium
         if (top3.isNotEmpty()) {
             Row(
-                modifier = Modifier.fillMaxWidth().height(220.dp),
+                modifier = Modifier.fillMaxWidth().height(280.dp),
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                if (top3.size >= 2) PodiumStep(top3[1], 2, 120.dp, Color(0xFF4285F4), font)
-                if (top3.size >= 1) PodiumStep(top3[0], 1, 160.dp, Color(0xFFD4AF37), font)
-                if (top3.size >= 3) PodiumStep(top3[2], 3, 90.dp, Color(0xFF00C853), font)
+                PodiumStep(top3.getOrNull(1), 2, 120.dp, PodiumSilver, font)
+                PodiumStep(top3.getOrNull(0), 1, 150.dp, PodiumGold, font)
+                PodiumStep(top3.getOrNull(2), 3, 90.dp, PodiumBronze, font)
             }
         }
 
         Spacer(Modifier.height(24.dp))
 
-        // Rest of the list (4th place and below)
         LazyColumn(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -84,13 +87,12 @@ fun FinalResultsScreen(
                     rank = index + 4,
                     playerName = player.player,
                     score = player.score,
-                    delta = 0, // Usually don't show delta on final screen
+                    delta = 0,
                     isMe = player.player == currentPlayerName
                 )
             }
         }
 
-        // Leave Button
         Spacer(Modifier.height(16.dp))
         Button(
             onClick = {
@@ -100,7 +102,7 @@ fun FinalResultsScreen(
                 }
             },
             modifier = Modifier.fillMaxWidth().height(58.dp),
-            shape = RoundedCornerShape(20.dp),
+            shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.buttonColors(containerColor = OurColors.Blue)
         ) {
             Text("Back to Home", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold)
@@ -110,23 +112,39 @@ fun FinalResultsScreen(
 
 @Composable
 private fun PodiumStep(
-    player: si.kaput.quizzler.common.PlayerScore,
+    player: si.kaput.quizzler.common.PlayerScore?,
     rank: Int,
     height: Dp,
     color: Color,
-    font: androidx.compose.ui.text.font.FontFamily
+    font: FontFamily
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        PlayerAvatar(name = player.player, size = 44.dp, shape = CircleShape, fontSize = 20.sp)
-        Spacer(Modifier.height(8.dp))
-        Text(player.player, fontWeight = FontWeight.Bold, fontSize = 14.sp, fontFamily = font)
-        Text("${player.score}", fontWeight = FontWeight.Black, color = Color.Gray, fontSize = 13.sp)
-        Spacer(Modifier.height(8.dp))
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Bottom,
+            modifier = Modifier.height(110.dp)
+        ) {
+            if (player != null) {
+                PlayerAvatar(name = player.player, size = 50.dp, shape = CircleShape, fontSize = 22.sp)
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    player.player,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                    fontFamily = font,
+                    maxLines = 1
+                )
+                Text("${player.score}", fontWeight = FontWeight.Black, color = Color.Gray, fontSize = 13.sp)
+            }
+        }
+
+        Spacer(Modifier.height(12.dp))
+
         Box(
             modifier = Modifier
-                .width(80.dp)
+                .width(90.dp)
                 .height(height)
-                .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+                .clip(RoundedCornerShape(topStart = 5.dp, topEnd = 5.dp))
                 .background(color),
             contentAlignment = Alignment.Center
         ) {

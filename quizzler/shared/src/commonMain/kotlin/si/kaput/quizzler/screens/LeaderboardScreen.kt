@@ -32,7 +32,6 @@ fun LeaderboardScreen(
     Column(
         Modifier.fillMaxSize().background(OurColors.Background).safeDrawingPadding().padding(24.dp)
     ) {
-        // Header bubble
         Box(
             Modifier.clip(RoundedCornerShape(50)).background(OurColors.TransparentBlue)
                 .padding(horizontal = 16.dp, vertical = 8.dp)

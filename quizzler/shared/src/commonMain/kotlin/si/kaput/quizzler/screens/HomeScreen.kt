@@ -78,7 +78,6 @@ fun HomeScreen(
             verticalAlignment = Alignment.CenterVertically
         ){
             Text("What will you choose?", fontFamily = font, fontWeight = FontWeight.Bold, fontSize = 20.sp)
-//            Text("127 online", color = OurColors.Navy, fontFamily = font, fontWeight = FontWeight.Black, fontSize = 18.sp) //TODO()
         }
         Spacer(Modifier.height(12.dp))
         Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
